@@ -10,6 +10,7 @@
 import { asc } from 'drizzle-orm';
 import Base from '@/layouts/Base.astro';
 import DishMedia from '@/components/DishMedia';
+import { jsonLdScript } from '@/lib/jsonLd';
 import { ChiliIcon, SparkIcon } from '@/components/Icon';
 import { db, schema } from '@/db/client';
 import { getOpenState } from '@/lib/hours';
@@ -107,7 +108,7 @@ const jsonLd = {
   description="Family-run Chinese takeout in Miramar. Order online for pickup — pay at the counter."
   transparentHeader
 >
-  <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  <script is:inline type="application/ld+json" set:html={jsonLdScript(jsonLd)} />
 
   <!-- ==================================================== HERO
        "Order Now" is visible without scrolling, 44px+ tap targets (§8.3). -->

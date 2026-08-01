@@ -73,12 +73,15 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
   const lines: schema.SubmissionLine[] = [];
   for (const raw of body.lines) {
     const item = itemById.get(raw?.itemId);
-    if (!item) continue; // dish was pulled since they built it — drop it
+    // Dropped if the dish was pulled since they built it, or 86'd since. A
+    // stale tab must not hand someone an order number for a dish the kitchen
+    // cannot make — they would only find out on the phone.
+    if (!item || !item.isAvailable) continue;
 
     const qty = clamp(raw.qty, 1, MAX_QTY) ?? 1;
     const chosen: ModifierRow[] = (Array.isArray(raw.modifierIds) ? raw.modifierIds : [])
       .map((id: unknown) => modById.get(id as number))
-      .filter((m: ModifierRow | undefined): m is ModifierRow => Boolean(m));
+      .filter((m: ModifierRow | undefined): m is ModifierRow => Boolean(m) && m!.isAvailable);
 
     const override = chosen.find((m) => m.priceOverrideCents != null);
     const unitPriceCents =
@@ -119,8 +122,12 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
       lines,
       localHour: Math.floor(now.minutes / 60),
       localWeekday: now.weekday,
-      storeOpen: open.isOpen,
-      closedReason: open.isOpen ? null : open.reason,
+      // acceptingOrders, not isOpen: the shop can be open while online ordering
+      // is paused or past its last-order cutoff. Recording isOpen there made a
+      // paused order look like a normal one and undercounted the
+      // "closed while building" figure the owner reads in the admin.
+      storeOpen: open.acceptingOrders,
+      closedReason: open.acceptingOrders ? null : open.reason,
       buildSeconds: clamp(body.buildSeconds, 0, 86_400),
       viewportWidth: clamp(body.viewportWidth, 0, 10_000),
       device: deviceFrom(body.viewportWidth, userAgent),

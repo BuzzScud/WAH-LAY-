@@ -113,9 +113,13 @@ function reconcile(cart: CartLine[], menu: MenuPayload): CartLine[] {
   const items = new Map(menu.categories.flatMap((c) => c.items).map((i) => [i.id, i]));
   return cart.flatMap((line) => {
     const item = items.get(line.itemId);
-    if (!item) return [];
+    // Gone from the menu, or 86'd since this cart was saved. Keeping an 86'd
+    // dish would let someone confirm an order the kitchen has to refuse.
+    if (!item || !item.isAvailable) return [];
 
-    const mods = item.groups.flatMap((g) => g.modifiers).filter((m) => line.modifierIds.includes(m.id));
+    const mods = item.groups
+      .flatMap((g) => g.modifiers)
+      .filter((m) => line.modifierIds.includes(m.id) && m.isAvailable);
     const override = mods.find((m) => m.priceOverrideCents != null);
     const unitPriceCents =
       (override ? override.priceOverrideCents! : item.basePriceCents) +

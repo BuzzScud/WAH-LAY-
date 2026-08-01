@@ -12,9 +12,17 @@ import { summarise } from '@/lib/submissionStats';
 
 export const prerender = false;
 
+/**
+ * Dish notes are free text a customer typed. Excel and Sheets treat a cell
+ * starting with = + - @ (or a leading tab/CR) as a formula, so a note like
+ * `=cmd|'/C calc'!A1` becomes a DDE payload the moment the owner opens this
+ * export. Prefixing with an apostrophe forces the cell to stay text; the
+ * apostrophe is not shown by the spreadsheet.
+ */
 const csvCell = (v: unknown) => {
-  const s = v == null ? '' : String(v);
-  return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+  let s = v == null ? '' : String(v);
+  if (/^[=+\-@\t\r]/.test(s)) s = `'${s}`;
+  return /[",\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
 };
 
 export const GET: APIRoute = async ({ url }) => {

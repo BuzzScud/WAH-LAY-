@@ -2,5 +2,12 @@
 # Replace example.com with your domain. If Cloudflare proxy (orange cloud)
 # is on, set SSL mode "Full (strict)" in Cloudflare.
 example.com, www.example.com {
+	# HSTS belongs at the edge — it is the only layer that knows TLS terminated
+	# here. The app sets the rest (CSP, nosniff, frame-ancestors) in middleware
+	# so they survive a proxy change. Do not enable preload until the domain has
+	# served HTTPS-only for a while: it is hard to undo.
+	header Strict-Transport-Security "max-age=31536000; includeSubDomains"
+	header -Server
+
 	reverse_proxy app:3000
 }

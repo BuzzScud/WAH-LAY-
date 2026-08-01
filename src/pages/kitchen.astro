@@ -1,0 +1,21 @@
+---
+/**
+ * Kitchen order queue. Middleware enforces device auth (Addendum B2) —
+ * enroll the tablet once via /kitchen?token=<KITCHEN_TOKEN>.
+ */
+import '@/styles/global.css';
+import KitchenApp from '@/components/KitchenApp';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Kitchen</title>
+    <meta name="robots" content="noindex" />
+  </head>
+  <body class="min-h-screen bg-stone-950 text-white">
+    <KitchenApp client:load />
+  </body>
+</html>

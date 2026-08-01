@@ -1,0 +1,49 @@
+---
+/**
+ * Admin console — designed for one-thumb use on a phone, standing at the
+ * register (plan phase 2). Middleware enforces the owner session.
+ */
+import '@/styles/global.css';
+import { asc } from 'drizzle-orm';
+import AdminApp from '@/components/AdminApp';
+import { db, schema } from '@/db/client';
+
+const settings = await db.query.storeSettings.findFirst();
+const cats = await db.query.categories.findMany({ orderBy: asc(schema.categories.sortOrder) });
+const items = await db.query.menuItems.findMany({ orderBy: asc(schema.menuItems.sortOrder) });
+const groups = await db.query.modifierGroups.findMany();
+const mods = await db.query.modifiers.findMany({ orderBy: asc(schema.modifiers.sortOrder) });
+const blocked = await db.query.blockedPhones.findMany();
+
+const initial = {
+  settings: settings
+    ? { orderingPaused: settings.orderingPaused, prepTimeMinutes: settings.prepTimeMinutes, taxRateBps: settings.taxRateBps }
+    : null,
+  categories: cats.map((c) => ({
+    id: c.id,
+    name: c.name,
+    items: items
+      .filter((i) => i.categoryId === c.id)
+      .map((i) => ({ id: i.id, nameEn: i.nameEn, basePriceCents: i.basePriceCents, isAvailable: i.isAvailable })),
+  })),
+  modifierGroups: groups.map((g) => ({
+    id: g.id,
+    name: g.name,
+    modifiers: mods.filter((m) => m.groupId === g.id).map((m) => ({ id: m.id, name: m.name, isAvailable: m.isAvailable })),
+  })),
+  blocked: blocked.map((b) => ({ phone: b.phone, reason: b.reason })),
+};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Admin</title>
+    <meta name="robots" content="noindex" />
+  </head>
+  <body class="min-h-screen bg-stone-100">
+    <AdminApp client:load initial={initial} />
+  </body>
+</html>

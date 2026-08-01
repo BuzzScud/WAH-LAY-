@@ -1,0 +1,23 @@
+# Local development: Postgres in Docker, app via `npm run dev` on the host.
+# Pin the same Postgres major you will run on the droplet — dev/prod parity
+# is the entire reason to use Compose locally.
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: takeout
+      POSTGRES_PASSWORD: takeout
+      POSTGRES_DB: takeout
+    ports:
+      - '127.0.0.1:5432:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U takeout']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  pgdata:

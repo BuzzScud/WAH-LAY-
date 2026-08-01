@@ -1,0 +1,41 @@
+---
+import Base from '@/layouts/Base.astro';
+import OrderApp from '@/components/OrderApp';
+import { db } from '@/db/client';
+import { getOpenState } from '@/lib/hours';
+
+const settings = await db.query.storeSettings.findFirst();
+const open = await getOpenState();
+const storeName = settings?.name ?? '';
+---
+
+<Base title={`Order — ${storeName}`} description="Build your pickup order online, then call it in. Pay at the counter.">
+  <!-- Compact header: the menu itself is the page, so this stays out of the way. -->
+  <div class="relative overflow-hidden bg-ink text-cream grain">
+    <div
+      class="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_120%_at_20%_0%,rgba(179,31,38,0.55),transparent),radial-gradient(50%_100%_at_85%_100%,rgba(226,180,85,0.2),transparent)]"
+    >
+    </div>
+    <div class="relative mx-auto flex max-w-3xl flex-wrap items-center justify-between gap-3 px-4 py-7">
+      <div>
+        <h1 class="text-3xl font-bold sm:text-4xl">Build your order</h1>
+        <p class="mt-1.5 text-cream/70">Build it here, call it in, pay at the counter.</p>
+      </div>
+      <p
+        class="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/6 px-4 py-2 text-sm"
+        role="status"
+      >
+        <span
+          class:list={['h-2 w-2 rounded-full', open.acceptingOrders ? 'bg-jade live-dot' : 'bg-gold']}
+          aria-hidden="true"></span>
+        {/* Server-rendered so it paints with the page; OrderApp then keeps it in
+            step with the cart, since a duck takes longer than an egg roll. */}
+        <span id="prep-estimate">
+          {open.acceptingOrders ? `Ready in about ${settings?.prepTimeMinutes ?? 15} min` : (open.reason ?? 'Closed')}
+        </span>
+      </p>
+    </div>
+  </div>
+
+  <OrderApp client:load />
+</Base>

@@ -1,0 +1,695 @@
+---
+/**
+ * Marketing page + full crawlable HTML menu (plan phase 1). Server-rendered —
+ * never a PDF, never behind client-side JS (§8.1, §8.2) — with JSON-LD for
+ * Restaurant + Menu so dishes surface in Google and AI search.
+ *
+ * Every dish carries a picture: the owner's photo from public/menu/ when one
+ * exists, otherwise the illustration for its archetype (see lib/dishArt.ts).
+ */
+import { asc } from 'drizzle-orm';
+import Base from '@/layouts/Base.astro';
+import DishMedia from '@/components/DishMedia';
+import { ChiliIcon, SparkIcon } from '@/components/Icon';
+import { db, schema } from '@/db/client';
+import { getOpenState } from '@/lib/hours';
+import { artForCategory, artForDish, artTint, dishSlug } from '@/lib/dishArt';
+import { categoryPhoto, dishPhoto } from '@/lib/dishPhotos';
+import { todayIndex, week } from '@/lib/hoursDisplay';
+
+const settings = await db.query.storeSettings.findFirst();
+const open = await getOpenState();
+const cats = await db.query.categories.findMany({ orderBy: asc(schema.categories.sortOrder) });
+const items = await db.query.menuItems.findMany({ orderBy: asc(schema.menuItems.sortOrder) });
+const hours = await db.query.businessHours.findMany();
+
+const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const dollars = (c: number) => `$${(c / 100).toFixed(2)}`;
+const storeName = settings?.name ?? 'Our Restaurant';
+const address = settings?.address ?? '';
+const mapHref = `https://maps.google.com/?q=${encodeURIComponent(address)}`;
+const telHref = `tel:${(settings?.phone ?? '').replace(/[^\d+]/g, '')}`;
+
+const activeCats = cats.filter((c) => c.active);
+const itemsOf = (catId: number) => items.filter((i) => i.categoryId === catId);
+const anchor = (name: string) => `cat-${dishSlug(name)}`;
+
+// The house picks drive the showcase. "Wah Lay Suggestions" if the menu has
+// it, otherwise whichever category the owner sorted first.
+const featuredCat =
+  activeCats.find((c) => /suggestion|chef|house special|specialt/i.test(c.name)) ?? activeCats[0];
+const featured = featuredCat ? itemsOf(featuredCat.id).filter((i) => i.basePriceCents > 0).slice(0, 6) : [];
+
+// Three tiles floating beside the headline: two real photos off the printed
+// menu, one illustration so the set doesn't read as a stock-photo collage.
+const heroTiles = [
+  { kind: 'crispy' as const, photo: dishPhoto("General Tso's Chicken"), name: "General Tso's Chicken" },
+  { kind: 'wings' as const, photo: dishPhoto('Fried Chicken Wings'), name: 'Fried Chicken Wings' },
+  { kind: 'dumpling' as const, photo: null, name: 'Dumplings' },
+];
+
+/**
+ * Promotions off the printed take-out menu. They live here rather than in the
+ * database because they are marketing copy, not orderable items — the owner
+ * edits this list when the coupons change.
+ */
+const freeOffers = [
+  { threshold: 30, item: 'Krab Rangoon' },
+  { threshold: 50, item: "General Tso's Chicken" },
+  { threshold: 70, item: 'Sweet & Sour Chicken' },
+  { threshold: 100, item: '1 lb Snow Crab Legs' },
+];
+const superSpecial = items.find((i) => /super special/i.test(i.nameEn));
+const halfTrays = items.filter((i) => /half tray/i.test(i.nameEn));
+const lunchCat = activeCats.find((c) => /lunch/i.test(c.name));
+const lunchItems = lunchCat ? itemsOf(lunchCat.id) : [];
+const lunchFrom = lunchItems.length ? Math.min(...lunchItems.map((i) => i.basePriceCents)) : 0;
+
+// Hours, Monday-first, with today flagged for highlighting.
+const tz = settings?.timezone ?? 'America/New_York';
+const todayIdx = todayIndex(tz);
+const weekRows = week(hours);
+const todayRow = weekRows.find((d) => d.index === todayIdx);
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Restaurant',
+  name: storeName,
+  telephone: settings?.phone,
+  address: settings?.address,
+  servesCuisine: 'Chinese',
+  hasMenu: {
+    '@type': 'Menu',
+    hasMenuSection: cats.map((c) => ({
+      '@type': 'MenuSection',
+      name: c.name,
+      hasMenuItem: items
+        .filter((i) => i.categoryId === c.id)
+        .map((i) => ({
+          '@type': 'MenuItem',
+          name: i.nameEn,
+          description: i.description ?? undefined,
+          offers: { '@type': 'Offer', price: (i.basePriceCents / 100).toFixed(2), priceCurrency: 'USD' },
+        })),
+    })),
+  },
+  openingHoursSpecification: hours.map((h) => ({
+    '@type': 'OpeningHoursSpecification',
+    dayOfWeek: dayNames[h.dayOfWeek],
+    opens: h.openTime,
+    closes: h.closeTime,
+  })),
+};
+---
+
+<Base
+  title={`${storeName} — Chinese Takeout in Miramar, FL`}
+  description="Family-run Chinese takeout in Miramar. Order online for pickup — pay at the counter."
+  transparentHeader
+>
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+  <!-- ==================================================== HERO
+       "Order Now" is visible without scrolling, 44px+ tap targets (§8.3). -->
+  <section class="relative -mt-16 overflow-hidden bg-ink pt-16 text-cream aurora grain gridlines">
+    <div class="relative mx-auto grid max-w-6xl items-center gap-12 px-4 py-16 sm:py-24 lg:grid-cols-[1.05fr_0.95fr] lg:py-28">
+      <div class="relative z-10">
+        <p class="rise flex flex-wrap items-center gap-x-3 gap-y-2 text-xs font-semibold uppercase tracking-[0.28em] text-gold">
+          <span>Miramar, Florida</span>
+          <span class="h-1 w-1 rounded-full bg-gold/50" aria-hidden="true"></span>
+          <span>Pickup only</span>
+        </p>
+
+        <h1 class="rise mt-5 text-[clamp(2.75rem,8vw,5.25rem)] font-bold leading-[0.95]" style="--reveal-delay:80ms">
+          <span class="block text-cream">{storeName}</span>
+          <span
+            class="mt-1 block bg-gradient-to-r from-gold via-[#f6dda0] to-gold-deep bg-clip-text text-transparent"
+            >Wok-fired to order.</span
+          >
+        </h1>
+
+        <p class="rise mt-6 max-w-lg text-lg leading-relaxed text-cream/75" style="--reveal-delay:160ms">
+          Lo mein, General Tso&rsquo;s, egg foo young, BBQ spareribs — the classics, cooked
+          fresh when you order. Build your order on the menu, call it in, pay at the counter.
+        </p>
+
+        <div class="rise mt-8 flex flex-wrap items-center gap-3" style="--reveal-delay:240ms">
+          <a
+            href="/order"
+            class="sheen inline-flex min-h-14 items-center gap-2 rounded-2xl bg-gradient-to-b from-gold to-gold-deep px-8 py-4 text-lg font-bold text-ink shadow-xl shadow-black/30 transition-transform duration-300 hover:-translate-y-0.5"
+          >
+            Order Now
+            <span aria-hidden="true">→</span>
+          </a>
+          <a
+            href={telHref}
+            class="inline-flex min-h-14 items-center rounded-2xl border border-white/25 bg-white/5 px-8 py-4 text-lg font-bold text-cream backdrop-blur transition-colors duration-300 hover:border-gold/60 hover:bg-white/10"
+          >
+            Call {settings?.phone}
+          </a>
+        </div>
+
+        <p
+          class="rise mt-6 inline-flex items-center gap-2.5 rounded-full border border-white/12 bg-white/6 px-4 py-2 text-sm text-cream/85"
+          role="status"
+          style="--reveal-delay:300ms"
+        >
+          <span
+            class:list={['h-2 w-2 rounded-full', open.acceptingOrders ? 'bg-jade live-dot' : 'bg-gold']}
+            aria-hidden="true"></span>
+          {
+            open.acceptingOrders
+              ? `Open and taking orders — about ${settings?.prepTimeMinutes ?? 15} minutes`
+              : `${open.reason ?? 'Closed right now'} — browse the menu and order when we open`
+          }
+        </p>
+      </div>
+
+      <!-- Floating dish tiles. Decorative, so they are aria-hidden. -->
+      <div class="rise relative mx-auto hidden w-full max-w-md lg:block" style="--reveal-delay:200ms" aria-hidden="true">
+        <div
+          class="absolute inset-0 -z-10 rounded-full bg-[radial-gradient(closest-side,rgba(226,180,85,0.22),transparent)] blur-2xl"
+        >
+        </div>
+        <div class="relative aspect-square">
+          <div
+            class="float-slow absolute left-0 top-6 h-56 w-56 overflow-hidden rounded-[2rem] border border-gold/25 shadow-2xl shadow-black/50"
+          >
+            <DishMedia {...heroTiles[0]} eager className="h-full w-full object-cover" />
+          </div>
+          <div
+            class="float-slower absolute right-0 top-0 h-40 w-40 overflow-hidden rounded-[1.5rem] border border-gold/25 shadow-2xl shadow-black/50"
+          >
+            <DishMedia {...heroTiles[1]} eager className="h-full w-full object-cover" />
+          </div>
+          <div
+            class="float-slow absolute bottom-2 right-8 h-48 w-48 overflow-hidden rounded-[1.75rem] border border-gold/25 shadow-2xl shadow-black/50"
+            style="animation-delay:-1.5s"
+          >
+            <DishMedia {...heroTiles[2]} className="h-full w-full object-cover" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scrolling ticker, doubled so the loop is seamless -->
+    <div class="relative border-y border-white/10 bg-black/25 py-3">
+      <div class="flex overflow-hidden hide-scrollbar" aria-hidden="true">
+        <div class="marquee-track flex shrink-0 items-center gap-8 whitespace-nowrap pr-8 text-xs font-semibold uppercase tracking-[0.3em] text-gold/70">
+          {
+            Array.from({ length: 2 }).flatMap(() =>
+              ['Wok-fired to order', 'Lunch specials Tue–Sat', 'Pickup only', 'Cash · Card · Zelle · Cash App', 'Across from Publix'].map((t) => (
+                <>
+                  <span>{t}</span>
+                  <SparkIcon className="h-2.5 w-2.5 shrink-0 text-gold/50" />
+                </>
+              ))
+            )
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================================================== SPECIALS -->
+  <section class="mx-auto max-w-6xl px-4 py-16 sm:py-20" aria-labelledby="specials-heading">
+    <div class="reveal text-center">
+      <p class="text-xs font-semibold uppercase tracking-[0.28em] text-gold-deep">Deals on right now</p>
+      <h2 id="specials-heading" class="mt-2 text-4xl font-bold sm:text-5xl">Specials</h2>
+      <div class="rule-gold mx-auto mt-5 h-0.5 w-24 rounded-full"></div>
+    </div>
+
+    <div class="mt-12 grid gap-5 lg:grid-cols-5">
+      <!-- The headline party pack -->
+      {
+        superSpecial && (
+          <article class="reveal card-lift group relative overflow-hidden rounded-[1.25rem] border border-line bg-ink text-cream shadow-sm lg:col-span-3">
+            <div class="absolute inset-0">
+              <DishMedia
+                kind="platter"
+                photo={dishPhoto(superSpecial.nameEn)}
+                name={superSpecial.nameEn}
+                className="art-zoom h-full w-full object-cover"
+              />
+              <div class="absolute inset-0 bg-gradient-to-r from-ink via-ink/92 to-ink/35" />
+            </div>
+            <div class="relative flex h-full flex-col justify-between gap-6 p-7 sm:p-9">
+              <div>
+                <p class="text-xs font-semibold uppercase tracking-[0.28em] text-gold">Feeds the whole table</p>
+                <h3 class="mt-3 font-display text-3xl font-bold sm:text-4xl">{superSpecial.nameEn}</h3>
+                <ul class="mt-5 max-w-xs space-y-1.5 text-sm text-cream/80">
+                  {(superSpecial.description ?? '')
+                    .replace(/\.$/, '')
+                    .split(/,\s*|\s+&\s+/)
+                    .filter(Boolean)
+                    .map((part) => (
+                      <li class="flex items-start gap-2.5">
+                        <SparkIcon className="mt-1.5 h-2.5 w-2.5 shrink-0 text-gold" />
+                        <span>{part}</span>
+                      </li>
+                    ))}
+                </ul>
+              </div>
+              <div class="flex flex-wrap items-end gap-4">
+                <p class="font-display text-5xl font-bold text-gold">{dollars(superSpecial.basePriceCents)}</p>
+                <a
+                  href="/order"
+                  class="inline-flex min-h-11 items-center rounded-xl bg-cream px-5 font-bold text-ink transition-transform duration-300 hover:-translate-y-0.5"
+                >
+                  Order it
+                </a>
+              </div>
+            </div>
+          </article>
+        )
+      }
+
+      <!-- Lunch -->
+      <article class="reveal card-lift flex flex-col justify-between rounded-[1.25rem] border border-line bg-gradient-to-br from-white to-cream-2 p-7 shadow-sm lg:col-span-2">
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-[0.28em] text-brand">Tue–Sat · 11:00 AM – 3:30 PM</p>
+          <h3 class="mt-3 font-display text-3xl font-bold">Lunch Special</h3>
+          <p class="mt-4 leading-relaxed text-stone-700">
+            {lunchItems.length} plates, each served with pork fried rice and a free soda or soup
+            — wonton or egg drop.
+          </p>
+        </div>
+        <div class="mt-6 flex flex-wrap items-end justify-between gap-4">
+          {
+            lunchFrom > 0 && (
+              <p class="font-display text-4xl font-bold">
+                <span class="align-middle text-base font-medium text-stone-500">from </span>
+                {dollars(lunchFrom)}
+              </p>
+            )
+          }
+          <a
+            href={lunchCat ? `#${anchor(lunchCat.name)}` : '#menu'}
+            class="inline-flex min-h-11 items-center rounded-xl bg-ink px-5 font-bold text-cream transition-transform duration-300 hover:-translate-y-0.5"
+          >
+            See all {lunchItems.length}
+          </a>
+        </div>
+      </article>
+    </div>
+
+    <!-- Spend-and-get offers, straight off the printed menu -->
+    <div class="reveal mt-5 rounded-[1.25rem] border border-gold/40 bg-gold/8 p-6 sm:p-8">
+      <div class="flex flex-wrap items-baseline justify-between gap-3">
+        <h3 class="font-display text-2xl font-bold">Free with your order</h3>
+        <p class="text-sm text-stone-600">Just mention it when you order. One offer per order.</p>
+      </div>
+      <ul class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {
+          freeOffers.map((o) => (
+            <li class="card-lift rounded-2xl border border-line bg-white p-5 text-center shadow-sm">
+              <p class="font-display text-xs font-bold uppercase tracking-[0.2em] text-brand">Free</p>
+              <p class="mt-2 font-display text-lg font-bold leading-snug">{o.item}</p>
+              <p class="mt-3 border-t border-line pt-3 text-sm text-stone-600">
+                on any order of <span class="font-semibold text-ink">${o.threshold}+</span>
+              </p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <!-- Party trays -->
+    {
+      halfTrays.length > 0 && (
+        <div class="reveal mt-5 flex flex-wrap items-center gap-x-8 gap-y-3 rounded-[1.25rem] border border-line bg-white px-6 py-5 shadow-sm sm:px-8">
+          <p class="font-display text-lg font-bold">Feeding a crowd? Half trays:</p>
+          {halfTrays.map((t) => (
+            <p class="text-stone-700">
+              {t.nameEn.replace(/^Half Tray\s*[—-]\s*/, '')}
+              <span class="ml-2 font-display font-bold text-ink">{dollars(t.basePriceCents)}</span>
+            </p>
+          ))}
+        </div>
+      )
+    }
+  </section>
+
+  <!-- ==================================================== SIGNATURES -->
+  {
+    featured.length > 0 && (
+      <section class="mx-auto max-w-6xl px-4 py-16 sm:py-20" aria-labelledby="signatures-heading">
+        <div class="reveal flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-[0.28em] text-gold-deep">The house picks</p>
+            <h2 id="signatures-heading" class="mt-2 text-4xl font-bold sm:text-5xl">
+              {featuredCat?.name}
+            </h2>
+          </div>
+          <a
+            href="#menu"
+            class="min-h-11 self-end text-sm font-semibold text-brand underline-offset-4 hover:underline"
+          >
+            See the whole menu ↓
+          </a>
+        </div>
+
+        <ul class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {featured.map((item, i) => (
+            <li class="reveal" style={`--reveal-delay:${i * 70}ms`}>
+              <a
+                href="/order"
+                class="card-lift group flex h-full flex-col overflow-hidden rounded-[1.25rem] border border-line bg-white shadow-sm"
+              >
+                <div class="relative aspect-[4/3] overflow-hidden bg-ink-2">
+                  <DishMedia
+                    kind={artForDish(item.nameEn, item.description, featuredCat!.name)}
+                    photo={dishPhoto(item.nameEn)}
+                    name={item.nameEn}
+                    tint={artTint(item.nameEn)}
+                    className="art-zoom h-full w-full object-cover"
+                  />
+                  <span class="absolute right-3 top-3 rounded-full bg-ink/85 px-3 py-1 text-sm font-bold text-gold backdrop-blur">
+                    {dollars(item.basePriceCents)}
+                  </span>
+                  {item.tags.includes('spicy') && (
+                    <span class="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full bg-brand px-2.5 py-1 text-xs font-semibold text-white">
+                      <ChiliIcon className="h-3 w-3" />
+                      Spicy
+                    </span>
+                  )}
+                </div>
+                <div class="flex flex-1 flex-col p-5">
+                  <p class="font-display text-lg font-bold leading-snug">
+                    {item.nameEn}
+                    {item.nameZh && (
+                      <span lang="zh" class="ml-2 text-base font-normal text-stone-400">
+                        {item.nameZh}
+                      </span>
+                    )}
+                  </p>
+                  {item.description && (
+                    <p class="mt-2 line-clamp-2 text-sm leading-relaxed text-stone-600">{item.description}</p>
+                  )}
+                  <span class="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-brand">
+                    Add to order
+                    <span
+                      class="transition-transform duration-300 group-hover:translate-x-1"
+                      aria-hidden="true"
+                    >
+                      →
+                    </span>
+                  </span>
+                </div>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+  <!-- ==================================================== MENU
+       Full HTML menu — the SEO surface. Ordering interactivity lives on /order. -->
+  <section id="menu" class="bg-cream-2/60 py-16 sm:py-20" aria-labelledby="menu-heading">
+    <div class="mx-auto max-w-6xl px-4">
+      <div class="reveal text-center">
+        <p class="text-xs font-semibold uppercase tracking-[0.28em] text-gold-deep">Everything we cook</p>
+        <h2 id="menu-heading" class="mt-2 text-4xl font-bold sm:text-5xl">The Menu</h2>
+        <div class="rule-gold mx-auto mt-5 h-0.5 w-24 rounded-full"></div>
+      </div>
+
+      <!-- Jump nav: sticky, horizontally scrollable on phones -->
+      <nav
+        class="sticky top-16 z-30 -mx-4 mt-8 border-y border-line/70 bg-cream/85 px-4 py-3 backdrop-blur-lg"
+        aria-label="Menu sections"
+      >
+        <ul class="hide-scrollbar flex gap-2 overflow-x-auto">
+          {
+            activeCats.map((cat) => (
+              <li class="shrink-0">
+                <a
+                  href={`#${anchor(cat.name)}`}
+                  class="inline-flex min-h-11 items-center rounded-full border border-line bg-white px-4 text-sm font-medium text-stone-700 transition-colors hover:border-gold hover:bg-gold/10 hover:text-ink"
+                >
+                  {cat.name.replace(/\s*\(.*\)$/, '')}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+
+      {
+        activeCats.map((cat) => {
+          const catItems = itemsOf(cat.id);
+          const catKind = artForCategory(cat.name);
+          if (catItems.length === 0) return null;
+          return (
+            <div id={anchor(cat.name)} class="scroll-mt-32 pt-14">
+              {/* Category banner */}
+              <div class="reveal relative overflow-hidden rounded-[1.25rem] border border-line bg-ink text-cream">
+                <div class="absolute inset-y-0 right-0 w-1/2 opacity-45">
+                  <DishMedia
+                    kind={catKind}
+                    photo={categoryPhoto(cat.name)}
+                    name={cat.name}
+                    className="h-full w-full object-cover"
+                  />
+                  <div class="absolute inset-0 bg-gradient-to-r from-ink via-ink/85 to-transparent" />
+                </div>
+                <div class="relative flex flex-wrap items-center justify-between gap-3 px-6 py-6 sm:px-8">
+                  <h3 class="font-display text-2xl font-bold sm:text-3xl">{cat.name}</h3>
+                  <span class="rounded-full border border-gold/30 bg-gold/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-gold">
+                    {catItems.length} {catItems.length === 1 ? 'dish' : 'dishes'}
+                  </span>
+                </div>
+              </div>
+
+              <ul class="mt-5 grid gap-3 sm:grid-cols-2 [content-visibility:auto] [contain-intrinsic-size:auto_600px]">
+                {catItems.map((item) => (
+                  <li class="card-lift group flex items-center gap-4 rounded-2xl border border-line bg-white p-3 shadow-sm">
+                    <div class="h-20 w-20 shrink-0 overflow-hidden rounded-xl bg-ink-2 sm:h-24 sm:w-24">
+                      <DishMedia
+                        kind={artForDish(item.nameEn, item.description, cat.name)}
+                        photo={dishPhoto(item.nameEn)}
+                        name={item.nameEn}
+                        variant="thumb"
+                        tint={artTint(item.nameEn)}
+                        className="art-zoom h-full w-full object-cover"
+                      />
+                    </div>
+                    <div class="min-w-0 flex-1">
+                      <p class="flex flex-wrap items-center gap-x-2 gap-y-1 font-semibold leading-snug">
+                        <span>{item.nameEn}</span>
+                        {item.nameZh && (
+                          <span lang="zh" class="text-sm font-normal text-stone-400">
+                            {item.nameZh}
+                          </span>
+                        )}
+                        {item.tags.includes('spicy') && (
+                          <span class="inline-flex items-center gap-1 rounded bg-brand/10 px-1.5 py-0.5 text-xs font-semibold text-brand">
+                            <ChiliIcon className="h-3 w-3" />
+                            Spicy
+                          </span>
+                        )}
+                        {item.tags.includes('vegetarian') && (
+                          <span class="rounded bg-jade/12 px-1.5 py-0.5 text-xs font-semibold text-jade">
+                            Vegetarian
+                          </span>
+                        )}
+                      </p>
+                      {item.description && (
+                        <p class="mt-1 text-sm leading-snug text-stone-600">{item.description}</p>
+                      )}
+                      {!item.isAvailable && (
+                        <p class="mt-1 text-sm font-semibold text-brand">Sold out today</p>
+                      )}
+                    </div>
+                    <p class="shrink-0 self-start whitespace-nowrap pt-1 font-display font-bold">
+                      {item.basePriceCents > 0 ? dollars(item.basePriceCents) : (
+                        <span class="text-sm font-medium text-stone-500">see options</span>
+                      )}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          );
+        })
+      }
+    </div>
+  </section>
+
+  <!-- ============================================ THE RESTAURANT + HOURS
+       One block for everything about the place itself: who runs it, when it
+       cooks, and where to drive. Hours and address are real text (§8.4). -->
+  <section id="visit" class="relative overflow-hidden bg-ink text-cream grain" aria-labelledby="about-heading">
+    <div
+      class="pointer-events-none absolute inset-0 bg-[radial-gradient(70%_55%_at_12%_0%,rgba(179,31,38,0.5),transparent),radial-gradient(45%_55%_at_92%_95%,rgba(226,180,85,0.16),transparent)]"
+    >
+    </div>
+
+    <div class="relative mx-auto max-w-6xl px-4 py-16 sm:py-20">
+      <div class="grid items-center gap-12 lg:grid-cols-2">
+        <div class="reveal">
+          <p class="text-xs font-semibold uppercase tracking-[0.28em] text-gold">Under new ownership</p>
+          <h2 id="about-heading" class="mt-3 text-4xl font-bold sm:text-5xl">
+            A small kitchen on Miramar Parkway.
+          </h2>
+          <p class="mt-6 max-w-lg text-lg leading-relaxed text-cream/75">
+            {storeName} is a takeout counter, not a dining room — one wok, a short walk from
+            Publix, and {items.length} dishes cooked the moment you order them. Same recipes, same
+            Formica counter, new owner behind it.
+          </p>
+          <p class="mt-4 max-w-lg leading-relaxed text-cream/60">
+            Pickup only, so nothing sits in a delivery bag getting soft. Order on your phone, drive
+            over, pay at the counter.
+          </p>
+
+          <dl class="mt-9 grid max-w-lg grid-cols-3 gap-4 border-t border-white/10 pt-7">
+            <div>
+              <dt class="text-xs uppercase tracking-wider text-cream/50">Ready in</dt>
+              <dd class="mt-1 font-display text-2xl font-bold text-gold">
+                ~{settings?.prepTimeMinutes ?? 15} min
+              </dd>
+            </div>
+            <div>
+              <dt class="text-xs uppercase tracking-wider text-cream/50">On the menu</dt>
+              <dd class="mt-1 font-display text-2xl font-bold text-gold">{items.length} dishes</dd>
+            </div>
+            <div>
+              <dt class="text-xs uppercase tracking-wider text-cream/50">Open</dt>
+              <dd class="mt-1 font-display text-2xl font-bold text-gold">6 days</dd>
+            </div>
+          </dl>
+        </div>
+
+        <!-- Collage of the owner's own menu photography -->
+        <div class="reveal grid grid-cols-2 gap-4" style="--reveal-delay:120ms">
+          <img
+            src="/brand/wordmark.jpg"
+            alt={`${storeName} sign`}
+            loading="lazy"
+            decoding="async"
+            class="col-span-2 w-full rounded-2xl border border-gold/25 shadow-xl shadow-black/40"
+          />
+          {
+            [
+              { kind: 'wings' as const, name: 'Fried Chicken Wings' },
+              { kind: 'noodles' as const, name: 'House Special Lo Mein' },
+              { kind: 'rice' as const, name: 'Shrimp Fried Rice' },
+              { kind: 'veg' as const, name: 'Vegetable Delight (Mandarin Style)' },
+            ].map((t) => (
+              <div class="aspect-[4/3] overflow-hidden rounded-2xl border border-white/12 shadow-xl shadow-black/40">
+                <DishMedia
+                  kind={t.kind}
+                  photo={dishPhoto(t.name)}
+                  name={t.name}
+                  className="h-full w-full object-cover"
+                />
+              </div>
+            ))
+          }
+        </div>
+      </div>
+
+      <!-- Hours + address -->
+      <div class="reveal mt-16 grid gap-10 border-t border-white/10 pt-14 lg:grid-cols-2 lg:gap-16">
+        <div>
+          <h3 id="hours-heading" class="font-display text-2xl font-bold text-cream">Hours</h3>
+          {
+            todayRow && (
+              <p class="mt-4 inline-flex flex-wrap items-center gap-x-3 gap-y-1 rounded-2xl border border-gold/30 bg-gold/10 px-5 py-3">
+                <span class="text-xs font-bold uppercase tracking-[0.18em] text-gold">Today</span>
+                <span class="font-display text-lg font-bold text-cream">{todayRow.name}</span>
+                <span class="font-display text-lg font-bold tabular-nums text-cream">{todayRow.hours}</span>
+              </p>
+            )
+          }
+          <table class="mt-5 w-full text-left">
+            <caption class="sr-only">Opening hours by day</caption>
+            <tbody>
+              {
+                weekRows.map((day) => (
+                  <tr class="border-b border-white/8">
+                    <th
+                      scope="row"
+                      class:list={[
+                        'py-2.5 pr-4 font-medium',
+                        day.index === todayIdx ? 'font-bold text-cream' : 'text-cream/70',
+                      ]}
+                    >
+                      {day.name}
+                    </th>
+                    <td
+                      class:list={[
+                        'py-2.5 text-right tabular-nums',
+                        day.index === todayIdx
+                          ? 'font-semibold text-cream'
+                          : day.closed
+                            ? 'text-cream/40'
+                            : 'text-cream/70',
+                      ]}
+                    >
+                      {day.hours}
+                    </td>
+                  </tr>
+                ))
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <div>
+          <h3 class="font-display text-2xl font-bold text-cream">Where to find us</h3>
+          <address class="mt-4 space-y-2 text-lg not-italic leading-relaxed">
+            <p class="font-display font-bold text-cream">{address}</p>
+            <p class="text-cream/60">Across from Publix. Parking out front.</p>
+          </address>
+
+          <div class="mt-6 flex flex-wrap gap-3">
+            <a
+              href={mapHref}
+              target="_blank"
+              rel="noopener"
+              class="inline-flex min-h-12 items-center rounded-xl bg-gradient-to-b from-gold to-gold-deep px-6 font-bold text-ink transition-transform duration-300 hover:-translate-y-0.5"
+              >Get directions</a
+            >
+            <a
+              href={telHref}
+              class="inline-flex min-h-12 items-center rounded-xl border border-white/25 bg-white/5 px-6 font-semibold text-cream transition-colors hover:border-gold/60 hover:bg-white/10"
+              >Call {settings?.phone}</a
+            >
+            <a
+              href="tel:9549661216"
+              class="inline-flex min-h-12 items-center rounded-xl border border-white/25 bg-white/5 px-6 font-semibold text-cream transition-colors hover:border-gold/60 hover:bg-white/10"
+              >Second line: (954) 966-1216</a
+            >
+          </div>
+
+          <p class="mt-6 border-t border-white/10 pt-5 leading-relaxed text-cream/60">
+            <span class="font-semibold text-cream">Pickup only — no delivery.</span> Pay at the counter:
+            cash, Visa, MasterCard, Discover, Apple Pay, Zelle or Cash App.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================================================== CLOSING CTA -->
+  <section class="relative overflow-hidden bg-ink text-cream aurora grain">
+    <div class="relative mx-auto max-w-3xl px-4 py-20 text-center sm:py-24">
+      <p class="reveal text-xs font-semibold uppercase tracking-[0.28em] text-gold">Hungry?</p>
+      <h2 class="reveal mt-4 text-4xl font-bold sm:text-5xl" style="--reveal-delay:80ms">
+        Your order will be ready in about {settings?.prepTimeMinutes ?? 15} minutes.
+      </h2>
+      <p class="reveal mt-5 text-lg text-cream/70" style="--reveal-delay:140ms">
+        Build it here, call it in, and pay at the counter when you pick it up.
+      </p>
+      <a
+        href="/order"
+        class="sheen reveal mt-9 inline-flex min-h-14 items-center gap-2 rounded-2xl bg-gradient-to-b from-gold to-gold-deep px-9 py-4 text-lg font-bold text-ink shadow-xl shadow-black/30 transition-transform duration-300 hover:-translate-y-0.5"
+        style="--reveal-delay:200ms"
+      >
+        Build my order
+        <span aria-hidden="true">→</span>
+      </a>
+    </div>
+  </section>
+</Base>

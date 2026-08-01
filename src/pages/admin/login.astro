@@ -1,0 +1,41 @@
+---
+import '@/styles/global.css';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Admin login</title>
+    <meta name="robots" content="noindex" />
+  </head>
+  <body class="flex min-h-screen items-center justify-center bg-stone-100">
+    <form id="login" class="w-full max-w-sm space-y-4 rounded-xl bg-white p-8 shadow">
+      <h1 class="text-xl font-bold">Owner login</h1>
+      <p id="error" class="hidden rounded bg-red-100 px-3 py-2 text-sm text-red-800" role="alert"></p>
+      <label class="block">
+        <span class="text-sm font-medium">Username</span>
+        <input name="username" autocomplete="username" required class="mt-1 w-full rounded-lg border border-stone-300 px-3 py-3" />
+      </label>
+      <label class="block">
+        <span class="text-sm font-medium">Password</span>
+        <input name="password" type="password" autocomplete="current-password" required class="mt-1 w-full rounded-lg border border-stone-300 px-3 py-3" />
+      </label>
+      <button class="w-full rounded-lg bg-brand px-4 py-3 font-semibold text-white">Sign in</button>
+    </form>
+    <script>
+      const form = document.getElementById('login') as HTMLFormElement;
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const res = await fetch('/api/admin/login', { method: 'POST', body: new FormData(form) });
+        if (res.ok) location.href = '/admin';
+        else {
+          const err = document.getElementById('error')!;
+          err.textContent = (await res.json().catch(() => ({}))).error ?? 'Login failed';
+          err.classList.remove('hidden');
+        }
+      });
+    </script>
+  </body>
+</html>

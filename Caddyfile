@@ -1,0 +1,6 @@
+# Automatic Let's Encrypt for apex + www. Two lines of real config.
+# Replace example.com with your domain. If Cloudflare proxy (orange cloud)
+# is on, set SSL mode "Full (strict)" in Cloudflare.
+example.com, www.example.com {
+	reverse_proxy app:3000
+}

@@ -1,0 +1,3017 @@
+{
+  "settings": {
+    "name": "Wah Lay",
+    "phone": "(954) 966-3768",
+    "address": "6941 Miramar Pkwy, Miramar, FL 33023",
+    "timezone": "America/New_York",
+    "taxRateBps": 700,
+    "prepTimeMinutes": 15
+  },
+  "hours": [
+    {
+      "dayOfWeek": 0,
+      "openTime": "12:00",
+      "closeTime": "21:00",
+      "lastOrderOffsetMinutes": 20
+    },
+    {
+      "dayOfWeek": 2,
+      "openTime": "11:00",
+      "closeTime": "21:30",
+      "lastOrderOffsetMinutes": 20
+    },
+    {
+      "dayOfWeek": 3,
+      "openTime": "11:00",
+      "closeTime": "21:30",
+      "lastOrderOffsetMinutes": 20
+    },
+    {
+      "dayOfWeek": 4,
+      "openTime": "11:00",
+      "closeTime": "21:30",
+      "lastOrderOffsetMinutes": 20
+    },
+    {
+      "dayOfWeek": 5,
+      "openTime": "11:00",
+      "closeTime": "22:30",
+      "lastOrderOffsetMinutes": 20
+    },
+    {
+      "dayOfWeek": 6,
+      "openTime": "11:00",
+      "closeTime": "22:30",
+      "lastOrderOffsetMinutes": 20
+    }
+  ],
+  "modifierGroups": [
+    {
+      "key": "protein-cp",
+      "name": "Chicken or pork?",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Chicken",
+          "priceDeltaCents": 0
+        },
+        {
+          "name": "Pork",
+          "priceDeltaCents": 0
+        }
+      ]
+    },
+    {
+      "key": "dumpling-style",
+      "name": "Fried or steamed?",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Fried",
+          "priceDeltaCents": 0
+        },
+        {
+          "name": "Steamed",
+          "priceDeltaCents": 0
+        }
+      ]
+    },
+    {
+      "key": "wings-2",
+      "name": "Wing flavor",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "BBQ",
+          "priceDeltaCents": 0
+        },
+        {
+          "name": "Honey",
+          "priceDeltaCents": 0
+        }
+      ]
+    },
+    {
+      "key": "wings-3",
+      "name": "Wing flavor",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "BBQ",
+          "priceDeltaCents": 0
+        },
+        {
+          "name": "Honey",
+          "priceDeltaCents": 0
+        },
+        {
+          "name": "Spicy",
+          "priceDeltaCents": 0
+        }
+      ]
+    },
+    {
+      "key": "combo-side",
+      "name": "Choice of side (included)",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Egg Roll",
+          "priceDeltaCents": 0
+        },
+        {
+          "name": "Can of Soda",
+          "priceDeltaCents": 0
+        },
+        {
+          "name": "Wonton Soup (pint)",
+          "priceDeltaCents": 0
+        },
+        {
+          "name": "Egg Drop Soup (pint)",
+          "priceDeltaCents": 0
+        },
+        {
+          "name": "Chicken Rice Soup (pint)",
+          "priceDeltaCents": 0
+        },
+        {
+          "name": "Chicken Yatka Mein Soup (pint)",
+          "priceDeltaCents": 0
+        }
+      ]
+    },
+    {
+      "key": "combo-soup-add",
+      "name": "Add a pint of soup (+$1.50)",
+      "minSelect": 0,
+      "maxSelect": 1,
+      "required": false,
+      "modifiers": [
+        {
+          "name": "Wonton Soup",
+          "priceDeltaCents": 150
+        },
+        {
+          "name": "Egg Drop Soup",
+          "priceDeltaCents": 150
+        },
+        {
+          "name": "Chicken Rice Soup",
+          "priceDeltaCents": 150
+        },
+        {
+          "name": "Chicken Yatka Mein Soup",
+          "priceDeltaCents": 150
+        }
+      ]
+    },
+    {
+      "key": "lunch-side",
+      "name": "Free soda or soup (included)",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Sprite",
+          "priceDeltaCents": 0
+        },
+        {
+          "name": "Coke",
+          "priceDeltaCents": 0
+        },
+        {
+          "name": "Wonton Soup",
+          "priceDeltaCents": 0
+        },
+        {
+          "name": "Egg Drop Soup",
+          "priceDeltaCents": 0
+        }
+      ]
+    },
+    {
+      "key": "ct-krab-rangoon",
+      "name": "How many?",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "5 pieces",
+          "priceOverrideCents": 400
+        },
+        {
+          "name": "10 pieces",
+          "priceOverrideCents": 725
+        }
+      ]
+    },
+    {
+      "key": "sz-french-fries",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Small",
+          "priceOverrideCents": 300
+        },
+        {
+          "name": "Large",
+          "priceOverrideCents": 400
+        }
+      ]
+    },
+    {
+      "key": "ct-fried-chicken-wings",
+      "name": "How many?",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "5 wings",
+          "priceOverrideCents": 650
+        },
+        {
+          "name": "10 wings",
+          "priceOverrideCents": 1250
+        },
+        {
+          "name": "20 wings",
+          "priceOverrideCents": 2400
+        }
+      ]
+    },
+    {
+      "key": "ct-bbq-or-honey-wings",
+      "name": "How many?",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "5 wings",
+          "priceOverrideCents": 750
+        },
+        {
+          "name": "10 wings",
+          "priceOverrideCents": 1350
+        }
+      ]
+    },
+    {
+      "key": "ct-szechuan-spicy-wings",
+      "name": "How many?",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "5 wings",
+          "priceOverrideCents": 750
+        },
+        {
+          "name": "10 wings",
+          "priceOverrideCents": 1350
+        }
+      ]
+    },
+    {
+      "key": "ct-buffalo-wings",
+      "name": "How many?",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "5 wings",
+          "priceOverrideCents": 800
+        },
+        {
+          "name": "10 wings",
+          "priceOverrideCents": 1375
+        }
+      ]
+    },
+    {
+      "key": "ct-bbq-spareribs",
+      "name": "How many?",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "4 pieces",
+          "priceOverrideCents": 925
+        },
+        {
+          "name": "7 pieces",
+          "priceOverrideCents": 1450
+        }
+      ]
+    },
+    {
+      "key": "ct-teriyaki-chicken",
+      "name": "How many?",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "4 sticks",
+          "priceOverrideCents": 675
+        },
+        {
+          "name": "6 sticks",
+          "priceOverrideCents": 899
+        },
+        {
+          "name": "10 sticks",
+          "priceOverrideCents": 1250
+        }
+      ]
+    },
+    {
+      "key": "sz-egg-drop-soup",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Pint",
+          "priceOverrideCents": 349
+        },
+        {
+          "name": "Quart",
+          "priceOverrideCents": 550
+        }
+      ]
+    },
+    {
+      "key": "sz-chicken-wonton-soup",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Pint",
+          "priceOverrideCents": 349
+        },
+        {
+          "name": "Quart",
+          "priceOverrideCents": 550
+        }
+      ]
+    },
+    {
+      "key": "sz-pork-wonton-soup",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Pint",
+          "priceOverrideCents": 349
+        },
+        {
+          "name": "Quart",
+          "priceOverrideCents": 550
+        }
+      ]
+    },
+    {
+      "key": "sz-mixed-soup",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Pint",
+          "priceOverrideCents": 349
+        },
+        {
+          "name": "Quart",
+          "priceOverrideCents": 550
+        }
+      ]
+    },
+    {
+      "key": "sz-hot-sour-soup",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Pint",
+          "priceOverrideCents": 375
+        },
+        {
+          "name": "Quart",
+          "priceOverrideCents": 575
+        }
+      ]
+    },
+    {
+      "key": "sz-chicken-or-pork-yatka-mein-soup",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Pint",
+          "priceOverrideCents": 375
+        },
+        {
+          "name": "Quart",
+          "priceOverrideCents": 550
+        }
+      ]
+    },
+    {
+      "key": "sz-chinese-vegetable-soup",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Pint",
+          "priceOverrideCents": 349
+        },
+        {
+          "name": "Quart",
+          "priceOverrideCents": 550
+        }
+      ]
+    },
+    {
+      "key": "sz-chicken-rice-soup",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Pint",
+          "priceOverrideCents": 349
+        },
+        {
+          "name": "Quart",
+          "priceOverrideCents": 550
+        }
+      ]
+    },
+    {
+      "key": "sz-roast-pork-fried-rice",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Small",
+          "priceOverrideCents": 700
+        },
+        {
+          "name": "Large",
+          "priceOverrideCents": 1000
+        },
+        {
+          "name": "Jumbo",
+          "priceOverrideCents": 1850
+        }
+      ]
+    },
+    {
+      "key": "sz-chicken-fried-rice",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Small",
+          "priceOverrideCents": 700
+        },
+        {
+          "name": "Large",
+          "priceOverrideCents": 1000
+        },
+        {
+          "name": "Jumbo",
+          "priceOverrideCents": 1850
+        }
+      ]
+    },
+    {
+      "key": "sz-vegetable-fried-rice",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Small",
+          "priceOverrideCents": 700
+        },
+        {
+          "name": "Large",
+          "priceOverrideCents": 1000
+        },
+        {
+          "name": "Jumbo",
+          "priceOverrideCents": 1850
+        }
+      ]
+    },
+    {
+      "key": "sz-shrimp-fried-rice",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Small",
+          "priceOverrideCents": 725
+        },
+        {
+          "name": "Large",
+          "priceOverrideCents": 1040
+        },
+        {
+          "name": "Jumbo",
+          "priceOverrideCents": 1975
+        }
+      ]
+    },
+    {
+      "key": "sz-ham-fried-rice",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Small",
+          "priceOverrideCents": 725
+        },
+        {
+          "name": "Large",
+          "priceOverrideCents": 1040
+        },
+        {
+          "name": "Jumbo",
+          "priceOverrideCents": 1975
+        }
+      ]
+    },
+    {
+      "key": "sz-beef-fried-rice",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Small",
+          "priceOverrideCents": 725
+        },
+        {
+          "name": "Large",
+          "priceOverrideCents": 1040
+        },
+        {
+          "name": "Jumbo",
+          "priceOverrideCents": 1975
+        }
+      ]
+    },
+    {
+      "key": "sz-special-fried-rice",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Small",
+          "priceOverrideCents": 775
+        },
+        {
+          "name": "Large",
+          "priceOverrideCents": 1075
+        },
+        {
+          "name": "Jumbo",
+          "priceOverrideCents": 2050
+        }
+      ]
+    },
+    {
+      "key": "sz-chicken-chow-mein",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Small",
+          "priceOverrideCents": 690
+        },
+        {
+          "name": "Large",
+          "priceOverrideCents": 1010
+        }
+      ]
+    },
+    {
+      "key": "sz-pork-chow-mein",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Small",
+          "priceOverrideCents": 690
+        },
+        {
+          "name": "Large",
+          "priceOverrideCents": 1010
+        }
+      ]
+    },
+    {
+      "key": "sz-white-meat-chicken-chow-mein",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Small",
+          "priceOverrideCents": 775
+        },
+        {
+          "name": "Large",
+          "priceOverrideCents": 1085
+        }
+      ]
+    },
+    {
+      "key": "sz-shrimp-chow-mein",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Small",
+          "priceOverrideCents": 800
+        },
+        {
+          "name": "Large",
+          "priceOverrideCents": 1135
+        }
+      ]
+    },
+    {
+      "key": "sz-beef-chow-mein",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Small",
+          "priceOverrideCents": 775
+        },
+        {
+          "name": "Large",
+          "priceOverrideCents": 1085
+        }
+      ]
+    },
+    {
+      "key": "sz-vegetable-chow-mein",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Small",
+          "priceOverrideCents": 690
+        },
+        {
+          "name": "Large",
+          "priceOverrideCents": 1010
+        }
+      ]
+    },
+    {
+      "key": "sz-house-special-chow-mein",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Small",
+          "priceOverrideCents": 800
+        },
+        {
+          "name": "Large",
+          "priceOverrideCents": 1165
+        }
+      ]
+    },
+    {
+      "key": "sz-subgum-chicken-chow-mein",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Small",
+          "priceOverrideCents": 750
+        },
+        {
+          "name": "Large",
+          "priceOverrideCents": 1037
+        }
+      ]
+    },
+    {
+      "key": "sz-subgum-shrimp-chow-mein",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Small",
+          "priceOverrideCents": 800
+        },
+        {
+          "name": "Large",
+          "priceOverrideCents": 1135
+        }
+      ]
+    },
+    {
+      "key": "sz-roast-pork-lo-mein",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Small",
+          "priceOverrideCents": 775
+        },
+        {
+          "name": "Large",
+          "priceOverrideCents": 1060
+        }
+      ]
+    },
+    {
+      "key": "sz-chicken-lo-mein",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Small",
+          "priceOverrideCents": 775
+        },
+        {
+          "name": "Large",
+          "priceOverrideCents": 1060
+        }
+      ]
+    },
+    {
+      "key": "sz-beef-lo-mein",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Small",
+          "priceOverrideCents": 800
+        },
+        {
+          "name": "Large",
+          "priceOverrideCents": 1110
+        }
+      ]
+    },
+    {
+      "key": "sz-shrimp-lo-mein",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Small",
+          "priceOverrideCents": 850
+        },
+        {
+          "name": "Large",
+          "priceOverrideCents": 1135
+        }
+      ]
+    },
+    {
+      "key": "sz-vegetable-lo-mein",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Small",
+          "priceOverrideCents": 775
+        },
+        {
+          "name": "Large",
+          "priceOverrideCents": 1060
+        }
+      ]
+    },
+    {
+      "key": "sz-house-special-lo-mein",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Small",
+          "priceOverrideCents": 850
+        },
+        {
+          "name": "Large",
+          "priceOverrideCents": 1185
+        }
+      ]
+    },
+    {
+      "key": "sz-chicken-chop-suey",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Small",
+          "priceOverrideCents": 725
+        },
+        {
+          "name": "Large",
+          "priceOverrideCents": 1060
+        }
+      ]
+    },
+    {
+      "key": "sz-pork-chop-suey",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Small",
+          "priceOverrideCents": 725
+        },
+        {
+          "name": "Large",
+          "priceOverrideCents": 1060
+        }
+      ]
+    },
+    {
+      "key": "sz-beef-chop-suey",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Small",
+          "priceOverrideCents": 775
+        },
+        {
+          "name": "Large",
+          "priceOverrideCents": 1110
+        }
+      ]
+    },
+    {
+      "key": "sz-shrimp-chop-suey",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Small",
+          "priceOverrideCents": 800
+        },
+        {
+          "name": "Large",
+          "priceOverrideCents": 1160
+        }
+      ]
+    },
+    {
+      "key": "sz-vegetable-chop-suey",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Small",
+          "priceOverrideCents": 700
+        },
+        {
+          "name": "Large",
+          "priceOverrideCents": 985
+        }
+      ]
+    },
+    {
+      "key": "sz-house-special-chop-suey",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Small",
+          "priceOverrideCents": 765
+        },
+        {
+          "name": "Large",
+          "priceOverrideCents": 1210
+        }
+      ]
+    },
+    {
+      "key": "sz-beef-with-broccoli",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Small",
+          "priceOverrideCents": 800
+        },
+        {
+          "name": "Large",
+          "priceOverrideCents": 1250
+        }
+      ]
+    },
+    {
+      "key": "sz-beef-with-oyster-sauce",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Small",
+          "priceOverrideCents": 800
+        },
+        {
+          "name": "Large",
+          "priceOverrideCents": 1250
+        }
+      ]
+    },
+    {
+      "key": "sz-pepper-steak-with-onions",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Small",
+          "priceOverrideCents": 800
+        },
+        {
+          "name": "Large",
+          "priceOverrideCents": 1250
+        }
+      ]
+    },
+    {
+      "key": "sz-beef-with-snow-pea-pods",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Small",
+          "priceOverrideCents": 800
+        },
+        {
+          "name": "Large",
+          "priceOverrideCents": 1250
+        }
+      ]
+    },
+    {
+      "key": "sz-beef-with-chinese-vegetables",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Small",
+          "priceOverrideCents": 800
+        },
+        {
+          "name": "Large",
+          "priceOverrideCents": 1250
+        }
+      ]
+    },
+    {
+      "key": "sz-beef-with-curry-sauce",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Small",
+          "priceOverrideCents": 800
+        },
+        {
+          "name": "Large",
+          "priceOverrideCents": 1250
+        }
+      ]
+    },
+    {
+      "key": "sz-beef-with-mushrooms",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Small",
+          "priceOverrideCents": 800
+        },
+        {
+          "name": "Large",
+          "priceOverrideCents": 1250
+        }
+      ]
+    },
+    {
+      "key": "sz-beef-with-black-bean",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Small",
+          "priceOverrideCents": 800
+        },
+        {
+          "name": "Large",
+          "priceOverrideCents": 1250
+        }
+      ]
+    },
+    {
+      "key": "sz-mongolian-beef",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Small",
+          "priceOverrideCents": 800
+        },
+        {
+          "name": "Large",
+          "priceOverrideCents": 1250
+        }
+      ]
+    },
+    {
+      "key": "sz-pork-with-snow-pea-pods",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Small",
+          "priceOverrideCents": 750
+        },
+        {
+          "name": "Large",
+          "priceOverrideCents": 1200
+        }
+      ]
+    },
+    {
+      "key": "sz-pork-with-bean-sprouts",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Small",
+          "priceOverrideCents": 750
+        },
+        {
+          "name": "Large",
+          "priceOverrideCents": 1200
+        }
+      ]
+    },
+    {
+      "key": "sz-pork-with-chinese-vegetables",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Small",
+          "priceOverrideCents": 750
+        },
+        {
+          "name": "Large",
+          "priceOverrideCents": 1200
+        }
+      ]
+    },
+    {
+      "key": "sz-pork-with-mushrooms",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Small",
+          "priceOverrideCents": 750
+        },
+        {
+          "name": "Large",
+          "priceOverrideCents": 1200
+        }
+      ]
+    },
+    {
+      "key": "sz-shrimp-with-lobster-sauce",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Small",
+          "priceOverrideCents": 850
+        },
+        {
+          "name": "Large",
+          "priceOverrideCents": 1275
+        }
+      ]
+    },
+    {
+      "key": "sz-shrimp-with-chinese-vegetables",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Small",
+          "priceOverrideCents": 850
+        },
+        {
+          "name": "Large",
+          "priceOverrideCents": 1275
+        }
+      ]
+    },
+    {
+      "key": "sz-shrimp-with-bean-sprouts",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Small",
+          "priceOverrideCents": 850
+        },
+        {
+          "name": "Large",
+          "priceOverrideCents": 1275
+        }
+      ]
+    },
+    {
+      "key": "sz-curry-shrimp",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Small",
+          "priceOverrideCents": 850
+        },
+        {
+          "name": "Large",
+          "priceOverrideCents": 1275
+        }
+      ]
+    },
+    {
+      "key": "sz-shrimp-with-broccoli",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Small",
+          "priceOverrideCents": 850
+        },
+        {
+          "name": "Large",
+          "priceOverrideCents": 1275
+        }
+      ]
+    },
+    {
+      "key": "sz-honey-garlic-chicken",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Small",
+          "priceOverrideCents": 800
+        },
+        {
+          "name": "Large",
+          "priceOverrideCents": 1200
+        }
+      ]
+    },
+    {
+      "key": "sz-bourbon-chicken",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Small",
+          "priceOverrideCents": 800
+        },
+        {
+          "name": "Large",
+          "priceOverrideCents": 1250
+        }
+      ]
+    },
+    {
+      "key": "sz-curry-chicken",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Small",
+          "priceOverrideCents": 800
+        },
+        {
+          "name": "Large",
+          "priceOverrideCents": 1250
+        }
+      ]
+    },
+    {
+      "key": "sz-moo-goo-gai-pan",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Small",
+          "priceOverrideCents": 800
+        },
+        {
+          "name": "Large",
+          "priceOverrideCents": 1250
+        }
+      ]
+    },
+    {
+      "key": "sz-chicken-with-broccoli",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Small",
+          "priceOverrideCents": 800
+        },
+        {
+          "name": "Large",
+          "priceOverrideCents": 1250
+        }
+      ]
+    },
+    {
+      "key": "sz-cashew-chicken",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Small",
+          "priceOverrideCents": 800
+        },
+        {
+          "name": "Large",
+          "priceOverrideCents": 1250
+        }
+      ]
+    },
+    {
+      "key": "sz-kung-po-chicken",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Small",
+          "priceOverrideCents": 800
+        },
+        {
+          "name": "Large",
+          "priceOverrideCents": 1250
+        }
+      ]
+    },
+    {
+      "key": "sz-sweet-sour-pork",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Small",
+          "priceOverrideCents": 800
+        },
+        {
+          "name": "Large",
+          "priceOverrideCents": 1200
+        }
+      ]
+    },
+    {
+      "key": "sz-sweet-sour-chicken",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Small",
+          "priceOverrideCents": 800
+        },
+        {
+          "name": "Large",
+          "priceOverrideCents": 1200
+        }
+      ]
+    },
+    {
+      "key": "sz-sweet-sour-shrimp",
+      "name": "Size",
+      "minSelect": 1,
+      "maxSelect": 1,
+      "required": true,
+      "modifiers": [
+        {
+          "name": "Small",
+          "priceOverrideCents": 800
+        },
+        {
+          "name": "Large",
+          "priceOverrideCents": 1200
+        }
+      ]
+    }
+  ],
+  "categories": [
+    {
+      "name": "Lunch Special (Tue-Sat, 11:00 AM-3:30 PM)",
+      "items": [
+        {
+          "nameEn": "L1. BBQ Spare Ribs (3)",
+          "basePriceCents": 1000,
+          "tags": [],
+          "groups": [
+            "lunch-side"
+          ],
+          "description": "Served w. pork fried rice. Lunch only: Tue-Sat 11:00 AM-3:30 PM."
+        },
+        {
+          "nameEn": "L2. BBQ Spareribs",
+          "basePriceCents": 975,
+          "tags": [],
+          "groups": [
+            "lunch-side"
+          ],
+          "description": "Served w. pork fried rice. Lunch only: Tue-Sat 11:00 AM-3:30 PM."
+        },
+        {
+          "nameEn": "L3. Fried Chicken Wings",
+          "basePriceCents": 1000,
+          "tags": [],
+          "groups": [
+            "lunch-side"
+          ],
+          "description": "Served w. pork fried rice. Lunch only: Tue-Sat 11:00 AM-3:30 PM."
+        },
+        {
+          "nameEn": "L4. BBQ, Honey or Spicy Wings",
+          "basePriceCents": 1050,
+          "tags": [],
+          "groups": [
+            "wings-3",
+            "lunch-side"
+          ],
+          "description": "Served w. pork fried rice. Lunch only: Tue-Sat 11:00 AM-3:30 PM."
+        },
+        {
+          "nameEn": "L5. Pork or Chicken Chow Mein",
+          "basePriceCents": 850,
+          "tags": [],
+          "groups": [
+            "protein-cp",
+            "lunch-side"
+          ],
+          "description": "Served w. pork fried rice. Lunch only: Tue-Sat 11:00 AM-3:30 PM."
+        },
+        {
+          "nameEn": "L6. Pepper Steak with Onions",
+          "basePriceCents": 900,
+          "tags": [],
+          "groups": [
+            "lunch-side"
+          ],
+          "description": "Served w. pork fried rice. Lunch only: Tue-Sat 11:00 AM-3:30 PM."
+        },
+        {
+          "nameEn": "L7. Moo Goo Gai Pan",
+          "basePriceCents": 875,
+          "tags": [],
+          "groups": [
+            "lunch-side"
+          ],
+          "description": "Served w. pork fried rice. Lunch only: Tue-Sat 11:00 AM-3:30 PM."
+        },
+        {
+          "nameEn": "L8. Honey Garlic Chicken",
+          "basePriceCents": 875,
+          "tags": [],
+          "groups": [
+            "lunch-side"
+          ],
+          "description": "Served w. pork fried rice. Lunch only: Tue-Sat 11:00 AM-3:30 PM."
+        },
+        {
+          "nameEn": "L9. Chicken or Roast Pork Lo Mein",
+          "basePriceCents": 875,
+          "tags": [],
+          "groups": [
+            "protein-cp",
+            "lunch-side"
+          ],
+          "description": "Served w. pork fried rice. Lunch only: Tue-Sat 11:00 AM-3:30 PM."
+        },
+        {
+          "nameEn": "L10. Shrimp with Lobster Sauce",
+          "basePriceCents": 875,
+          "tags": [],
+          "groups": [
+            "lunch-side"
+          ],
+          "description": "Served w. pork fried rice. Lunch only: Tue-Sat 11:00 AM-3:30 PM."
+        },
+        {
+          "nameEn": "L11. Chicken (White Meat) with Broccoli",
+          "basePriceCents": 875,
+          "tags": [],
+          "groups": [
+            "lunch-side"
+          ],
+          "description": "Served w. pork fried rice. Lunch only: Tue-Sat 11:00 AM-3:30 PM."
+        },
+        {
+          "nameEn": "L12. Curry Chicken",
+          "basePriceCents": 875,
+          "tags": [
+            "spicy"
+          ],
+          "groups": [
+            "lunch-side"
+          ],
+          "description": "Served w. pork fried rice. Lunch only: Tue-Sat 11:00 AM-3:30 PM."
+        },
+        {
+          "nameEn": "L13. House Special Lo Mein",
+          "basePriceCents": 975,
+          "tags": [],
+          "groups": [
+            "lunch-side"
+          ],
+          "description": "Served w. pork fried rice. Lunch only: Tue-Sat 11:00 AM-3:30 PM."
+        },
+        {
+          "nameEn": "L14. Sweet & Sour Chicken",
+          "basePriceCents": 875,
+          "tags": [],
+          "groups": [
+            "lunch-side"
+          ],
+          "description": "Served w. pork fried rice. Lunch only: Tue-Sat 11:00 AM-3:30 PM."
+        },
+        {
+          "nameEn": "L15. Chicken or Pork Chop Suey",
+          "basePriceCents": 875,
+          "tags": [],
+          "groups": [
+            "protein-cp",
+            "lunch-side"
+          ],
+          "description": "Served w. pork fried rice. Lunch only: Tue-Sat 11:00 AM-3:30 PM."
+        },
+        {
+          "nameEn": "L16. Bourbon Chicken",
+          "basePriceCents": 875,
+          "tags": [],
+          "groups": [
+            "lunch-side"
+          ],
+          "description": "Served w. pork fried rice. Lunch only: Tue-Sat 11:00 AM-3:30 PM."
+        },
+        {
+          "nameEn": "L17. General Tso's Chicken",
+          "basePriceCents": 925,
+          "tags": [
+            "spicy"
+          ],
+          "groups": [
+            "lunch-side"
+          ],
+          "description": "Served w. pork fried rice. Lunch only: Tue-Sat 11:00 AM-3:30 PM."
+        },
+        {
+          "nameEn": "L18. Orange Chicken",
+          "basePriceCents": 925,
+          "tags": [],
+          "groups": [
+            "lunch-side"
+          ],
+          "description": "Served w. pork fried rice. Lunch only: Tue-Sat 11:00 AM-3:30 PM."
+        },
+        {
+          "nameEn": "L19. Sesame Chicken",
+          "basePriceCents": 925,
+          "tags": [],
+          "groups": [
+            "lunch-side"
+          ],
+          "description": "Served w. pork fried rice. Lunch only: Tue-Sat 11:00 AM-3:30 PM."
+        },
+        {
+          "nameEn": "L20. Fantail Shrimp (4)",
+          "basePriceCents": 900,
+          "tags": [],
+          "groups": [
+            "lunch-side"
+          ],
+          "description": "Served w. pork fried rice. Lunch only: Tue-Sat 11:00 AM-3:30 PM."
+        }
+      ]
+    },
+    {
+      "name": "Special Combination Platters",
+      "items": [
+        {
+          "nameEn": "C1. Chicken or Pork Chow Mein",
+          "basePriceCents": 1175,
+          "tags": [],
+          "groups": [
+            "protein-cp",
+            "combo-side",
+            "combo-soup-add"
+          ],
+          "description": "Served w. pork fried rice & your choice of side."
+        },
+        {
+          "nameEn": "C2. Shrimp Chow Mein",
+          "basePriceCents": 1200,
+          "tags": [],
+          "groups": [
+            "combo-side",
+            "combo-soup-add"
+          ],
+          "description": "Served w. pork fried rice & your choice of side."
+        },
+        {
+          "nameEn": "C5. BBQ Spareribs (4)",
+          "basePriceCents": 1400,
+          "tags": [],
+          "groups": [
+            "combo-side",
+            "combo-soup-add"
+          ],
+          "description": "Served w. pork fried rice & your choice of side."
+        },
+        {
+          "nameEn": "C6. BBQ Spareribs (3) & Fantail Shrimp (2)",
+          "basePriceCents": 1400,
+          "tags": [],
+          "groups": [
+            "combo-side",
+            "combo-soup-add"
+          ],
+          "description": "Served w. pork fried rice & your choice of side."
+        },
+        {
+          "nameEn": "C7a. Fried Chicken Wings (8)",
+          "basePriceCents": 1450,
+          "tags": [],
+          "groups": [
+            "combo-side",
+            "combo-soup-add"
+          ],
+          "description": "Served w. pork fried rice & your choice of side."
+        },
+        {
+          "nameEn": "C7b. Honey, BBQ or Spicy Wings (8)",
+          "basePriceCents": 1500,
+          "tags": [],
+          "groups": [
+            "wings-3",
+            "combo-side",
+            "combo-soup-add"
+          ],
+          "description": "Served w. pork fried rice & your choice of side."
+        },
+        {
+          "nameEn": "C8. Pepper Steak w. Onions",
+          "basePriceCents": 1225,
+          "tags": [],
+          "groups": [
+            "combo-side",
+            "combo-soup-add"
+          ],
+          "description": "Served w. pork fried rice & your choice of side."
+        },
+        {
+          "nameEn": "C9. Moo Goo Gai Pan",
+          "basePriceCents": 1225,
+          "tags": [],
+          "groups": [
+            "combo-side",
+            "combo-soup-add"
+          ],
+          "description": "Served w. pork fried rice & your choice of side."
+        },
+        {
+          "nameEn": "C10. Pork Egg Foo Young",
+          "basePriceCents": 1225,
+          "tags": [],
+          "groups": [
+            "combo-side",
+            "combo-soup-add"
+          ],
+          "description": "Served w. pork fried rice & your choice of side."
+        },
+        {
+          "nameEn": "C11. Pork or Chicken Lo Mein",
+          "basePriceCents": 1175,
+          "tags": [],
+          "groups": [
+            "protein-cp",
+            "combo-side",
+            "combo-soup-add"
+          ],
+          "description": "Served w. pork fried rice & your choice of side."
+        },
+        {
+          "nameEn": "C12. Chicken Broccoli",
+          "basePriceCents": 1225,
+          "tags": [],
+          "groups": [
+            "combo-side",
+            "combo-soup-add"
+          ],
+          "description": "Served w. pork fried rice & your choice of side."
+        },
+        {
+          "nameEn": "C13. Sweet & Sour Pork or Chicken",
+          "basePriceCents": 1225,
+          "tags": [],
+          "groups": [
+            "protein-cp",
+            "combo-side",
+            "combo-soup-add"
+          ],
+          "description": "Served w. pork fried rice & your choice of side."
+        },
+        {
+          "nameEn": "C14. Curry Chicken",
+          "basePriceCents": 1225,
+          "tags": [
+            "spicy"
+          ],
+          "groups": [
+            "combo-side",
+            "combo-soup-add"
+          ],
+          "description": "Served w. pork fried rice & your choice of side."
+        },
+        {
+          "nameEn": "C15. Shrimp w. Lobster Sauce",
+          "basePriceCents": 1249,
+          "tags": [],
+          "groups": [
+            "combo-side",
+            "combo-soup-add"
+          ],
+          "description": "Served w. pork fried rice & your choice of side."
+        },
+        {
+          "nameEn": "C16. Pork with Bean Sprouts",
+          "basePriceCents": 1200,
+          "tags": [],
+          "groups": [
+            "combo-side",
+            "combo-soup-add"
+          ],
+          "description": "Served w. pork fried rice & your choice of side."
+        },
+        {
+          "nameEn": "C17. Beef with Vegetables",
+          "basePriceCents": 1225,
+          "tags": [],
+          "groups": [
+            "combo-side",
+            "combo-soup-add"
+          ],
+          "description": "Served w. pork fried rice & your choice of side."
+        },
+        {
+          "nameEn": "C18. Honey Garlic Chicken",
+          "basePriceCents": 1225,
+          "tags": [],
+          "groups": [
+            "combo-side",
+            "combo-soup-add"
+          ],
+          "description": "Served w. pork fried rice & your choice of side."
+        },
+        {
+          "nameEn": "C19. Shredded Beef Szechuan",
+          "basePriceCents": 1225,
+          "tags": [
+            "spicy"
+          ],
+          "groups": [
+            "combo-side",
+            "combo-soup-add"
+          ],
+          "description": "Served w. pork fried rice & your choice of side."
+        },
+        {
+          "nameEn": "C20. Kung Po Chicken",
+          "basePriceCents": 1225,
+          "tags": [
+            "spicy"
+          ],
+          "groups": [
+            "combo-side",
+            "combo-soup-add"
+          ],
+          "description": "Served w. pork fried rice & your choice of side."
+        },
+        {
+          "nameEn": "C21. Cashew Chicken",
+          "basePriceCents": 1225,
+          "tags": [],
+          "groups": [
+            "combo-side",
+            "combo-soup-add"
+          ],
+          "description": "Served w. pork fried rice & your choice of side."
+        },
+        {
+          "nameEn": "C22. Fantail Shrimp",
+          "basePriceCents": 1200,
+          "tags": [],
+          "groups": [
+            "combo-side",
+            "combo-soup-add"
+          ],
+          "description": "Served w. pork fried rice & your choice of side."
+        },
+        {
+          "nameEn": "C23. Pork or Chicken Chop Suey",
+          "basePriceCents": 1200,
+          "tags": [],
+          "groups": [
+            "protein-cp",
+            "combo-side",
+            "combo-soup-add"
+          ],
+          "description": "Served w. pork fried rice & your choice of side."
+        },
+        {
+          "nameEn": "C24. Ribs & Chicken Wings",
+          "basePriceCents": 1450,
+          "tags": [],
+          "groups": [
+            "combo-side",
+            "combo-soup-add"
+          ],
+          "description": "Served w. pork fried rice & your choice of side."
+        },
+        {
+          "nameEn": "C25. Bourbon Chicken",
+          "basePriceCents": 1225,
+          "tags": [],
+          "groups": [
+            "combo-side",
+            "combo-soup-add"
+          ],
+          "description": "Served w. pork fried rice & your choice of side."
+        },
+        {
+          "nameEn": "C27. General Tso's Chicken",
+          "basePriceCents": 1300,
+          "tags": [
+            "spicy"
+          ],
+          "groups": [
+            "combo-side",
+            "combo-soup-add"
+          ],
+          "description": "Served w. pork fried rice & your choice of side."
+        },
+        {
+          "nameEn": "C28. Orange Chicken",
+          "basePriceCents": 1300,
+          "tags": [],
+          "groups": [
+            "combo-side",
+            "combo-soup-add"
+          ],
+          "description": "Served w. pork fried rice & your choice of side."
+        },
+        {
+          "nameEn": "C29. Sesame Chicken",
+          "basePriceCents": 1300,
+          "tags": [],
+          "groups": [
+            "combo-side",
+            "combo-soup-add"
+          ],
+          "description": "Served w. pork fried rice & your choice of side."
+        },
+        {
+          "nameEn": "C30. Tofu with Chinese Vegetable",
+          "basePriceCents": 1225,
+          "tags": [],
+          "groups": [
+            "combo-side",
+            "combo-soup-add"
+          ],
+          "description": "Served w. pork fried rice & your choice of side."
+        },
+        {
+          "nameEn": "C31. Sweet & Sour Ribs",
+          "basePriceCents": 1300,
+          "tags": [],
+          "groups": [
+            "combo-side",
+            "combo-soup-add"
+          ],
+          "description": "Served w. pork fried rice & your choice of side."
+        }
+      ]
+    },
+    {
+      "name": "Wah Lay Suggestions",
+      "items": [
+        {
+          "nameEn": "Singapore Rice Noodles",
+          "basePriceCents": 1550,
+          "tags": [
+            "spicy"
+          ],
+          "groups": [],
+          "nameZh": "星洲炒米粉",
+          "description": "Shrimp, roast pork, white meat chicken and ham sauteed in a zesty curry seasoning with thin rice noodles and Chinese vegetables. Served w. white rice."
+        },
+        {
+          "nameEn": "Triple Delight",
+          "basePriceCents": 1600,
+          "tags": [],
+          "groups": [],
+          "nameZh": "三鲜",
+          "description": "Jumbo shrimp, white meat chicken & beef tenderloin sauteed with Chinese vegetables. Served w. white rice."
+        },
+        {
+          "nameEn": "Orange Chicken",
+          "basePriceCents": 1450,
+          "tags": [],
+          "groups": [],
+          "nameZh": "陈皮鸡",
+          "description": "Lightly battered chicken sauteed to golden brown in a tangy orange-flavored sauce, garnished w. broccoli. Served w. white rice."
+        },
+        {
+          "nameEn": "Mandarin Chicken",
+          "basePriceCents": 1450,
+          "tags": [],
+          "groups": [],
+          "description": "Tender slices of chicken lightly breaded and sauteed with onions in our special sauce. Served w. white rice."
+        },
+        {
+          "nameEn": "General Tso's Chicken",
+          "basePriceCents": 1450,
+          "tags": [
+            "spicy"
+          ],
+          "groups": [],
+          "nameZh": "左宗鸡",
+          "description": "Tender slices of chicken lightly breaded and sauteed in spicy, sour and sweet brown sauce, garnished with broccoli. Served w. white rice."
+        },
+        {
+          "nameEn": "Sesame Chicken",
+          "basePriceCents": 1450,
+          "tags": [],
+          "groups": [],
+          "nameZh": "芝麻鸡",
+          "description": "Tender slices of chicken in a special brown sauce, topped w. sesame seeds & garnished with broccoli. Served w. white rice."
+        },
+        {
+          "nameEn": "Hong Kong Duck",
+          "basePriceCents": 1800,
+          "tags": [],
+          "groups": [],
+          "description": "Fried duck with mixed Chinese vegetables. Served w. white rice."
+        },
+        {
+          "nameEn": "Shredded Beef Szechuan",
+          "basePriceCents": 1625,
+          "tags": [
+            "spicy"
+          ],
+          "groups": [],
+          "nameZh": "四川牛肉丝",
+          "description": "Tenderloin beef sauteed with special finely cut vegetables in a spicy Szechuan sweet & sour sauce. Served w. white rice."
+        },
+        {
+          "nameEn": "Shredded Chicken Szechuan",
+          "basePriceCents": 1450,
+          "tags": [
+            "spicy"
+          ],
+          "groups": [],
+          "nameZh": "四川鸡丝",
+          "description": "Shredded chicken sauteed in red hot sauce w. bamboo shoots, green and red peppers, ginger & onion. Served w. white rice."
+        },
+        {
+          "nameEn": "Mongolian Beef",
+          "basePriceCents": 1500,
+          "tags": [
+            "spicy"
+          ],
+          "groups": [],
+          "nameZh": "蒙古牛",
+          "description": "Sliced tender filet of beef & scallions sauteed in an exotic spicy sauce. Served w. white rice."
+        },
+        {
+          "nameEn": "Seafood Delight",
+          "basePriceCents": 1995,
+          "tags": [],
+          "groups": [],
+          "nameZh": "海鲜大会",
+          "description": "Assorted seafood tossed with assorted vegetables. Served w. white rice."
+        },
+        {
+          "nameEn": "Happy Family",
+          "basePriceCents": 1995,
+          "tags": [],
+          "groups": [],
+          "nameZh": "全家福",
+          "description": "Tender sliced chicken, beef, roast pork, shrimp and scallops, prepared with special Chinese vegetables in light brown sauce. Served w. white rice."
+        }
+      ]
+    },
+    {
+      "name": "Appetizers",
+      "items": [
+        {
+          "nameEn": "Plantains",
+          "basePriceCents": 495,
+          "tags": [],
+          "groups": []
+        },
+        {
+          "nameEn": "Krab Rangoon",
+          "basePriceCents": 400,
+          "tags": [],
+          "groups": [
+            "ct-krab-rangoon"
+          ],
+          "nameZh": "蟹角"
+        },
+        {
+          "nameEn": "Vegetable Spring Rolls",
+          "basePriceCents": 375,
+          "tags": [
+            "vegetarian"
+          ],
+          "groups": [],
+          "nameZh": "素春卷"
+        },
+        {
+          "nameEn": "French Fries",
+          "basePriceCents": 300,
+          "tags": [
+            "vegetarian"
+          ],
+          "groups": [
+            "sz-french-fries"
+          ],
+          "nameZh": "薯条"
+        },
+        {
+          "nameEn": "Egg Roll (each)",
+          "basePriceCents": 200,
+          "tags": [],
+          "groups": [
+            "protein-cp"
+          ],
+          "nameZh": "春卷"
+        },
+        {
+          "nameEn": "Fried Chicken Wings",
+          "basePriceCents": 650,
+          "tags": [],
+          "groups": [
+            "ct-fried-chicken-wings"
+          ],
+          "nameZh": "炸鸡翅"
+        },
+        {
+          "nameEn": "BBQ or Honey Wings",
+          "basePriceCents": 750,
+          "tags": [],
+          "groups": [
+            "ct-bbq-or-honey-wings",
+            "wings-2"
+          ]
+        },
+        {
+          "nameEn": "Szechuan Spicy Wings",
+          "basePriceCents": 750,
+          "tags": [
+            "spicy"
+          ],
+          "groups": [
+            "ct-szechuan-spicy-wings"
+          ]
+        },
+        {
+          "nameEn": "Pepper Chicken Wings (10)",
+          "basePriceCents": 1375,
+          "tags": [
+            "spicy"
+          ],
+          "groups": []
+        },
+        {
+          "nameEn": "Buffalo Wings",
+          "basePriceCents": 800,
+          "tags": [
+            "spicy"
+          ],
+          "groups": [
+            "ct-buffalo-wings"
+          ]
+        },
+        {
+          "nameEn": "Steak on Stick (5)",
+          "basePriceCents": 750,
+          "tags": [],
+          "groups": [],
+          "nameZh": "牛肉串"
+        },
+        {
+          "nameEn": "Fantail Shrimp (6)",
+          "basePriceCents": 825,
+          "tags": [],
+          "groups": [],
+          "nameZh": "凤尾虾"
+        },
+        {
+          "nameEn": "Dumplings",
+          "basePriceCents": 750,
+          "tags": [],
+          "groups": [
+            "dumpling-style",
+            "protein-cp"
+          ],
+          "nameZh": "饺子"
+        },
+        {
+          "nameEn": "Boneless Ribs",
+          "basePriceCents": 800,
+          "tags": [],
+          "groups": [],
+          "nameZh": "无骨叉烧"
+        },
+        {
+          "nameEn": "BBQ Spareribs",
+          "basePriceCents": 925,
+          "tags": [],
+          "groups": [
+            "ct-bbq-spareribs"
+          ],
+          "nameZh": "烧排骨"
+        },
+        {
+          "nameEn": "Fried Wonton (12)",
+          "basePriceCents": 575,
+          "tags": [],
+          "groups": [],
+          "nameZh": "炸云吞"
+        },
+        {
+          "nameEn": "Teriyaki Chicken",
+          "basePriceCents": 675,
+          "tags": [],
+          "groups": [
+            "ct-teriyaki-chicken"
+          ]
+        },
+        {
+          "nameEn": "Sugar Donuts (10)",
+          "basePriceCents": 650,
+          "tags": [],
+          "groups": []
+        }
+      ]
+    },
+    {
+      "name": "Soups",
+      "items": [
+        {
+          "nameEn": "Egg Drop Soup",
+          "basePriceCents": 349,
+          "tags": [],
+          "groups": [
+            "sz-egg-drop-soup"
+          ],
+          "nameZh": "蛋花汤"
+        },
+        {
+          "nameEn": "Chicken Wonton Soup",
+          "basePriceCents": 349,
+          "tags": [],
+          "groups": [
+            "sz-chicken-wonton-soup"
+          ],
+          "nameZh": "鸡云吞汤"
+        },
+        {
+          "nameEn": "Pork Wonton Soup",
+          "basePriceCents": 349,
+          "tags": [],
+          "groups": [
+            "sz-pork-wonton-soup"
+          ],
+          "nameZh": "云吞汤"
+        },
+        {
+          "nameEn": "Mixed Soup",
+          "basePriceCents": 349,
+          "tags": [],
+          "groups": [
+            "sz-mixed-soup"
+          ]
+        },
+        {
+          "nameEn": "Hot & Sour Soup",
+          "basePriceCents": 375,
+          "tags": [
+            "spicy"
+          ],
+          "groups": [
+            "sz-hot-sour-soup"
+          ],
+          "nameZh": "酸辣汤"
+        },
+        {
+          "nameEn": "Chicken or Pork Yatka Mein Soup",
+          "basePriceCents": 375,
+          "tags": [],
+          "groups": [
+            "sz-chicken-or-pork-yatka-mein-soup",
+            "protein-cp"
+          ]
+        },
+        {
+          "nameEn": "Chinese Vegetable Soup",
+          "basePriceCents": 349,
+          "tags": [],
+          "groups": [
+            "sz-chinese-vegetable-soup"
+          ],
+          "nameZh": "杂菜汤"
+        },
+        {
+          "nameEn": "Chicken Rice Soup",
+          "basePriceCents": 349,
+          "tags": [],
+          "groups": [
+            "sz-chicken-rice-soup"
+          ]
+        },
+        {
+          "nameEn": "House Special Soup",
+          "basePriceCents": 775,
+          "tags": [],
+          "groups": [],
+          "nameZh": "本楼汤"
+        }
+      ]
+    },
+    {
+      "name": "Fried Rice",
+      "items": [
+        {
+          "nameEn": "Roast Pork Fried Rice",
+          "basePriceCents": 700,
+          "tags": [],
+          "groups": [
+            "sz-roast-pork-fried-rice"
+          ],
+          "nameZh": "叉烧炒饭"
+        },
+        {
+          "nameEn": "Chicken Fried Rice",
+          "basePriceCents": 700,
+          "tags": [],
+          "groups": [
+            "sz-chicken-fried-rice"
+          ],
+          "nameZh": "鸡炒饭"
+        },
+        {
+          "nameEn": "Vegetable Fried Rice",
+          "basePriceCents": 700,
+          "tags": [
+            "vegetarian"
+          ],
+          "groups": [
+            "sz-vegetable-fried-rice"
+          ],
+          "nameZh": "菜炒饭"
+        },
+        {
+          "nameEn": "Shrimp Fried Rice",
+          "basePriceCents": 725,
+          "tags": [],
+          "groups": [
+            "sz-shrimp-fried-rice"
+          ],
+          "nameZh": "虾炒饭"
+        },
+        {
+          "nameEn": "Ham Fried Rice",
+          "basePriceCents": 725,
+          "tags": [],
+          "groups": [
+            "sz-ham-fried-rice"
+          ],
+          "nameZh": "火腿炒饭"
+        },
+        {
+          "nameEn": "Beef Fried Rice",
+          "basePriceCents": 725,
+          "tags": [],
+          "groups": [
+            "sz-beef-fried-rice"
+          ],
+          "nameZh": "牛炒饭"
+        },
+        {
+          "nameEn": "Special Fried Rice",
+          "basePriceCents": 775,
+          "tags": [],
+          "groups": [
+            "sz-special-fried-rice"
+          ],
+          "nameZh": "本楼炒饭"
+        }
+      ]
+    },
+    {
+      "name": "Chow Mein (w. White Rice & Fried Noodles)",
+      "items": [
+        {
+          "nameEn": "Chicken Chow Mein",
+          "basePriceCents": 690,
+          "tags": [],
+          "groups": [
+            "sz-chicken-chow-mein"
+          ],
+          "nameZh": "鸡炒面"
+        },
+        {
+          "nameEn": "Pork Chow Mein",
+          "basePriceCents": 690,
+          "tags": [],
+          "groups": [
+            "sz-pork-chow-mein"
+          ],
+          "nameZh": "叉烧炒面"
+        },
+        {
+          "nameEn": "White Meat Chicken Chow Mein",
+          "basePriceCents": 775,
+          "tags": [],
+          "groups": [
+            "sz-white-meat-chicken-chow-mein"
+          ]
+        },
+        {
+          "nameEn": "Shrimp Chow Mein",
+          "basePriceCents": 800,
+          "tags": [],
+          "groups": [
+            "sz-shrimp-chow-mein"
+          ],
+          "nameZh": "虾炒面"
+        },
+        {
+          "nameEn": "Beef Chow Mein",
+          "basePriceCents": 775,
+          "tags": [],
+          "groups": [
+            "sz-beef-chow-mein"
+          ],
+          "nameZh": "牛炒面"
+        },
+        {
+          "nameEn": "Vegetable Chow Mein",
+          "basePriceCents": 690,
+          "tags": [
+            "vegetarian"
+          ],
+          "groups": [
+            "sz-vegetable-chow-mein"
+          ],
+          "nameZh": "菜炒面"
+        },
+        {
+          "nameEn": "House Special Chow Mein",
+          "basePriceCents": 800,
+          "tags": [],
+          "groups": [
+            "sz-house-special-chow-mein"
+          ],
+          "nameZh": "本楼炒面"
+        },
+        {
+          "nameEn": "Subgum Chicken Chow Mein",
+          "basePriceCents": 750,
+          "tags": [],
+          "groups": [
+            "sz-subgum-chicken-chow-mein"
+          ],
+          "nameZh": "什锦鸡炒面"
+        },
+        {
+          "nameEn": "Subgum Shrimp Chow Mein",
+          "basePriceCents": 800,
+          "tags": [],
+          "groups": [
+            "sz-subgum-shrimp-chow-mein"
+          ],
+          "nameZh": "什锦虾炒面"
+        }
+      ]
+    },
+    {
+      "name": "Lo Mein (Soft Noodles)",
+      "items": [
+        {
+          "nameEn": "Roast Pork Lo Mein",
+          "basePriceCents": 775,
+          "tags": [],
+          "groups": [
+            "sz-roast-pork-lo-mein"
+          ],
+          "nameZh": "叉烧捞面"
+        },
+        {
+          "nameEn": "Chicken Lo Mein",
+          "basePriceCents": 775,
+          "tags": [],
+          "groups": [
+            "sz-chicken-lo-mein"
+          ],
+          "nameZh": "鸡捞面"
+        },
+        {
+          "nameEn": "Beef Lo Mein",
+          "basePriceCents": 800,
+          "tags": [],
+          "groups": [
+            "sz-beef-lo-mein"
+          ],
+          "nameZh": "牛捞面"
+        },
+        {
+          "nameEn": "Shrimp Lo Mein",
+          "basePriceCents": 850,
+          "tags": [],
+          "groups": [
+            "sz-shrimp-lo-mein"
+          ],
+          "nameZh": "虾捞面"
+        },
+        {
+          "nameEn": "Vegetable Lo Mein",
+          "basePriceCents": 775,
+          "tags": [
+            "vegetarian"
+          ],
+          "groups": [
+            "sz-vegetable-lo-mein"
+          ],
+          "nameZh": "菜捞面"
+        },
+        {
+          "nameEn": "House Special Lo Mein",
+          "basePriceCents": 850,
+          "tags": [],
+          "groups": [
+            "sz-house-special-lo-mein"
+          ],
+          "nameZh": "本楼捞面"
+        }
+      ]
+    },
+    {
+      "name": "Chop Suey (w. White Rice)",
+      "items": [
+        {
+          "nameEn": "Chicken Chop Suey",
+          "basePriceCents": 725,
+          "tags": [],
+          "groups": [
+            "sz-chicken-chop-suey"
+          ],
+          "nameZh": "鸡杂碎"
+        },
+        {
+          "nameEn": "Pork Chop Suey",
+          "basePriceCents": 725,
+          "tags": [],
+          "groups": [
+            "sz-pork-chop-suey"
+          ],
+          "nameZh": "叉烧杂碎"
+        },
+        {
+          "nameEn": "Beef Chop Suey",
+          "basePriceCents": 775,
+          "tags": [],
+          "groups": [
+            "sz-beef-chop-suey"
+          ],
+          "nameZh": "牛杂碎"
+        },
+        {
+          "nameEn": "Shrimp Chop Suey",
+          "basePriceCents": 800,
+          "tags": [],
+          "groups": [
+            "sz-shrimp-chop-suey"
+          ],
+          "nameZh": "虾杂碎"
+        },
+        {
+          "nameEn": "Vegetable Chop Suey",
+          "basePriceCents": 700,
+          "tags": [
+            "vegetarian"
+          ],
+          "groups": [
+            "sz-vegetable-chop-suey"
+          ],
+          "nameZh": "菜杂碎"
+        },
+        {
+          "nameEn": "House Special Chop Suey",
+          "basePriceCents": 765,
+          "tags": [],
+          "groups": [
+            "sz-house-special-chop-suey"
+          ],
+          "nameZh": "本楼杂碎"
+        }
+      ]
+    },
+    {
+      "name": "Egg Foo Young (w. White Rice & Gravy)",
+      "items": [
+        {
+          "nameEn": "Roast Pork Egg Foo Young",
+          "basePriceCents": 1060,
+          "tags": [],
+          "groups": [],
+          "nameZh": "叉烧芙蓉蛋"
+        },
+        {
+          "nameEn": "Chicken Egg Foo Young",
+          "basePriceCents": 1060,
+          "tags": [],
+          "groups": [],
+          "nameZh": "鸡芙蓉蛋"
+        },
+        {
+          "nameEn": "Shrimp Egg Foo Young",
+          "basePriceCents": 1160,
+          "tags": [],
+          "groups": [],
+          "nameZh": "虾芙蓉蛋"
+        },
+        {
+          "nameEn": "Vegetable Egg Foo Young",
+          "basePriceCents": 1060,
+          "tags": [
+            "vegetarian"
+          ],
+          "groups": [],
+          "nameZh": "菜芙蓉蛋"
+        },
+        {
+          "nameEn": "Special Egg Foo Young",
+          "basePriceCents": 1210,
+          "tags": [],
+          "groups": [],
+          "nameZh": "本楼芙蓉蛋"
+        }
+      ]
+    },
+    {
+      "name": "Beef (w. White Rice)",
+      "items": [
+        {
+          "nameEn": "Beef with Broccoli",
+          "basePriceCents": 800,
+          "tags": [],
+          "groups": [
+            "sz-beef-with-broccoli"
+          ],
+          "nameZh": "芥兰牛"
+        },
+        {
+          "nameEn": "Beef with Oyster Sauce",
+          "basePriceCents": 800,
+          "tags": [],
+          "groups": [
+            "sz-beef-with-oyster-sauce"
+          ],
+          "nameZh": "蚝油牛"
+        },
+        {
+          "nameEn": "Pepper Steak with Onions",
+          "basePriceCents": 800,
+          "tags": [],
+          "groups": [
+            "sz-pepper-steak-with-onions"
+          ],
+          "nameZh": "青椒牛"
+        },
+        {
+          "nameEn": "Beef with Snow Pea Pods",
+          "basePriceCents": 800,
+          "tags": [],
+          "groups": [
+            "sz-beef-with-snow-pea-pods"
+          ],
+          "nameZh": "雪豆牛"
+        },
+        {
+          "nameEn": "Beef with Chinese Vegetables",
+          "basePriceCents": 800,
+          "tags": [],
+          "groups": [
+            "sz-beef-with-chinese-vegetables"
+          ],
+          "nameZh": "杂菜牛"
+        },
+        {
+          "nameEn": "Beef with Curry Sauce",
+          "basePriceCents": 800,
+          "tags": [
+            "spicy"
+          ],
+          "groups": [
+            "sz-beef-with-curry-sauce"
+          ],
+          "nameZh": "咖喱牛"
+        },
+        {
+          "nameEn": "Beef with Mushrooms",
+          "basePriceCents": 800,
+          "tags": [],
+          "groups": [
+            "sz-beef-with-mushrooms"
+          ],
+          "nameZh": "蘑菇牛"
+        },
+        {
+          "nameEn": "Beef with Black Bean",
+          "basePriceCents": 800,
+          "tags": [],
+          "groups": [
+            "sz-beef-with-black-bean"
+          ],
+          "nameZh": "豉椒牛"
+        },
+        {
+          "nameEn": "Mongolian Beef",
+          "basePriceCents": 800,
+          "tags": [],
+          "groups": [
+            "sz-mongolian-beef"
+          ],
+          "nameZh": "蒙古牛"
+        }
+      ]
+    },
+    {
+      "name": "Pork (w. White Rice)",
+      "items": [
+        {
+          "nameEn": "Pork with Snow Pea Pods",
+          "basePriceCents": 750,
+          "tags": [],
+          "groups": [
+            "sz-pork-with-snow-pea-pods"
+          ],
+          "nameZh": "雪豆肉"
+        },
+        {
+          "nameEn": "Pork with Bean Sprouts",
+          "basePriceCents": 750,
+          "tags": [],
+          "groups": [
+            "sz-pork-with-bean-sprouts"
+          ],
+          "nameZh": "芽菜肉"
+        },
+        {
+          "nameEn": "Pork with Chinese Vegetables",
+          "basePriceCents": 750,
+          "tags": [],
+          "groups": [
+            "sz-pork-with-chinese-vegetables"
+          ],
+          "nameZh": "杂菜肉"
+        },
+        {
+          "nameEn": "Pork with Mushrooms",
+          "basePriceCents": 750,
+          "tags": [],
+          "groups": [
+            "sz-pork-with-mushrooms"
+          ],
+          "nameZh": "蘑菇肉"
+        }
+      ]
+    },
+    {
+      "name": "Shrimp (w. White Rice)",
+      "items": [
+        {
+          "nameEn": "Shrimp with Lobster Sauce",
+          "basePriceCents": 850,
+          "tags": [],
+          "groups": [
+            "sz-shrimp-with-lobster-sauce"
+          ],
+          "nameZh": "虾龙糊"
+        },
+        {
+          "nameEn": "Shrimp with Chinese Vegetables",
+          "basePriceCents": 850,
+          "tags": [],
+          "groups": [
+            "sz-shrimp-with-chinese-vegetables"
+          ],
+          "nameZh": "杂菜虾"
+        },
+        {
+          "nameEn": "Shrimp with Bean Sprouts",
+          "basePriceCents": 850,
+          "tags": [],
+          "groups": [
+            "sz-shrimp-with-bean-sprouts"
+          ],
+          "nameZh": "芽菜虾"
+        },
+        {
+          "nameEn": "Curry Shrimp",
+          "basePriceCents": 850,
+          "tags": [
+            "spicy"
+          ],
+          "groups": [
+            "sz-curry-shrimp"
+          ],
+          "nameZh": "咖喱虾"
+        },
+        {
+          "nameEn": "Shrimp with Broccoli",
+          "basePriceCents": 850,
+          "tags": [],
+          "groups": [
+            "sz-shrimp-with-broccoli"
+          ],
+          "nameZh": "芥兰虾"
+        }
+      ]
+    },
+    {
+      "name": "Chicken (w. White Rice)",
+      "items": [
+        {
+          "nameEn": "Honey Garlic Chicken",
+          "basePriceCents": 800,
+          "tags": [],
+          "groups": [
+            "sz-honey-garlic-chicken"
+          ]
+        },
+        {
+          "nameEn": "Bourbon Chicken",
+          "basePriceCents": 800,
+          "tags": [],
+          "groups": [
+            "sz-bourbon-chicken"
+          ]
+        },
+        {
+          "nameEn": "Curry Chicken",
+          "basePriceCents": 800,
+          "tags": [
+            "spicy"
+          ],
+          "groups": [
+            "sz-curry-chicken"
+          ],
+          "nameZh": "咖喱鸡"
+        },
+        {
+          "nameEn": "Moo Goo Gai Pan",
+          "basePriceCents": 800,
+          "tags": [],
+          "groups": [
+            "sz-moo-goo-gai-pan"
+          ],
+          "nameZh": "蘑菇鸡片"
+        },
+        {
+          "nameEn": "Chicken with Broccoli",
+          "basePriceCents": 800,
+          "tags": [],
+          "groups": [
+            "sz-chicken-with-broccoli"
+          ],
+          "nameZh": "芥兰鸡"
+        },
+        {
+          "nameEn": "Mongolian Chicken",
+          "basePriceCents": 1250,
+          "tags": [],
+          "groups": [],
+          "nameZh": "蒙古鸡",
+          "description": "Large only."
+        },
+        {
+          "nameEn": "Cashew Chicken",
+          "basePriceCents": 800,
+          "tags": [],
+          "groups": [
+            "sz-cashew-chicken"
+          ],
+          "nameZh": "腰果鸡"
+        },
+        {
+          "nameEn": "Kung Po Chicken",
+          "basePriceCents": 800,
+          "tags": [
+            "spicy"
+          ],
+          "groups": [
+            "sz-kung-po-chicken"
+          ],
+          "nameZh": "宫保鸡"
+        }
+      ]
+    },
+    {
+      "name": "Sweet & Sour (w. White Rice)",
+      "items": [
+        {
+          "nameEn": "Sweet & Sour Pork",
+          "basePriceCents": 800,
+          "tags": [],
+          "groups": [
+            "sz-sweet-sour-pork"
+          ],
+          "nameZh": "甜酸肉"
+        },
+        {
+          "nameEn": "Sweet & Sour Chicken",
+          "basePriceCents": 800,
+          "tags": [],
+          "groups": [
+            "sz-sweet-sour-chicken"
+          ],
+          "nameZh": "甜酸鸡"
+        },
+        {
+          "nameEn": "Sweet & Sour Shrimp",
+          "basePriceCents": 800,
+          "tags": [],
+          "groups": [
+            "sz-sweet-sour-shrimp"
+          ],
+          "nameZh": "甜酸虾"
+        }
+      ]
+    },
+    {
+      "name": "Vegetarian Dishes (w. White Rice)",
+      "items": [
+        {
+          "nameEn": "Tofu with Chinese Vegetables",
+          "basePriceCents": 1250,
+          "tags": [
+            "vegetarian"
+          ],
+          "groups": [],
+          "nameZh": "杂菜豆腐"
+        },
+        {
+          "nameEn": "Broccoli with Garlic Sauce",
+          "basePriceCents": 1050,
+          "tags": [
+            "vegetarian"
+          ],
+          "groups": [],
+          "nameZh": "鱼香芥兰"
+        },
+        {
+          "nameEn": "Mixed Vegetables w. Garlic Sauce",
+          "basePriceCents": 1100,
+          "tags": [
+            "vegetarian"
+          ],
+          "groups": [],
+          "nameZh": "鱼香杂菜"
+        },
+        {
+          "nameEn": "Vegetable Delight (Mandarin Style)",
+          "basePriceCents": 1200,
+          "tags": [
+            "vegetarian"
+          ],
+          "groups": [],
+          "nameZh": "素什锦"
+        },
+        {
+          "nameEn": "General Tso's Tofu",
+          "basePriceCents": 1300,
+          "tags": [
+            "spicy",
+            "vegetarian"
+          ],
+          "groups": [],
+          "nameZh": "左宗豆腐"
+        },
+        {
+          "nameEn": "Sesame Tofu",
+          "basePriceCents": 1300,
+          "tags": [
+            "vegetarian"
+          ],
+          "groups": [],
+          "nameZh": "芝麻豆腐"
+        }
+      ]
+    },
+    {
+      "name": "Party Trays & Super Special",
+      "items": [
+        {
+          "nameEn": "Wah Lay Super Special",
+          "basePriceCents": 4500,
+          "tags": [],
+          "groups": [
+            "protein-cp"
+          ],
+          "description": "Jumbo pork or chicken fried rice, chicken wings (20 pcs), Krab Rangoon (8) & teriyaki chicken (4)."
+        },
+        {
+          "nameEn": "Half Tray — House Fried Rice",
+          "basePriceCents": 3500,
+          "tags": [],
+          "groups": [],
+          "nameZh": "本楼炒饭(半盘)"
+        },
+        {
+          "nameEn": "Half Tray — House Lo Mein",
+          "basePriceCents": 4000,
+          "tags": [],
+          "groups": [],
+          "nameZh": "本楼捞面(半盘)"
+        }
+      ]
+    }
+  ]
+}

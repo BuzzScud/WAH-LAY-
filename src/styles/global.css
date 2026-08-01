@@ -1,0 +1,353 @@
+@import 'tailwindcss';
+
+/* ==========================================================================
+   Wah Lay design system.
+
+   Warm lacquer-and-gold palette on a cream page, with ink-dark bands for the
+   hero and footer. Motion is decorative only — every animation here is
+   disabled under prefers-reduced-motion, and nothing below is required to
+   read the menu, the hours, or the phone number.
+   ========================================================================== */
+
+@theme {
+  /* Brand */
+  --color-brand: #b31f26;
+  --color-brand-dark: #7c1616;
+  --color-brand-glow: #e0453f;
+  --color-gold: #e2b455;
+  --color-gold-deep: #a97c26;
+  --color-jade: #359c78;
+
+  /* Surfaces */
+  --color-ink: #150e0d;
+  --color-ink-2: #241615;
+  --color-ink-3: #35201e;
+  --color-cream: #fbf7f1;
+  --color-cream-2: #f4ece1;
+  --color-line: #e6dccd;
+
+  --font-display: 'Space Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-cjk: 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+
+  --radius-card: 1.25rem;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5.5rem; /* sticky header + breathing room */
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: var(--font-sans);
+}
+
+h1,
+h2,
+h3,
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+}
+
+[lang='zh'] {
+  font-family: var(--font-cjk);
+}
+
+/* Accessibility non-negotiable (§8.1): visible focus rings everywhere. */
+:focus-visible {
+  outline: 3px solid var(--color-gold);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+::selection {
+  background: var(--color-gold);
+  color: var(--color-ink);
+}
+
+/* --------------------------------------------------------------------------
+   Textures
+   -------------------------------------------------------------------------- */
+
+/* Fine film grain so the large dark fields don't band on cheap phone screens. */
+.grain::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Faint gold hairline grid — the "futuristic" note, kept almost subliminal. */
+.gridlines::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.55;
+  background-image:
+    linear-gradient(to right, rgb(226 180 85 / 0.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(226 180 85 / 0.07) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse 90% 70% at 50% 40%, #000 20%, transparent 75%);
+}
+
+/* Slow-drifting warm light behind the hero. */
+.aurora::before {
+  content: '';
+  position: absolute;
+  inset: -40%;
+  pointer-events: none;
+  background:
+    radial-gradient(38% 42% at 22% 32%, rgb(179 31 38 / 0.55), transparent 70%),
+    radial-gradient(34% 38% at 78% 26%, rgb(226 180 85 / 0.28), transparent 70%),
+    radial-gradient(46% 50% at 60% 88%, rgb(169 124 38 / 0.3), transparent 70%);
+  filter: blur(20px);
+  animation: aurora-drift 26s ease-in-out infinite alternate;
+}
+
+@keyframes aurora-drift {
+  0% {
+    transform: translate3d(-3%, -2%, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(3%, 2%, 0) scale(1.08);
+  }
+  100% {
+    transform: translate3d(-2%, 3%, 0) scale(1.03);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Motion
+   -------------------------------------------------------------------------- */
+
+/* Scroll reveal. Elements start visible and are only hidden once JS confirms
+   it can un-hide them, so a failed script never eats the menu. */
+.reveal {
+  opacity: 1;
+}
+html.js .reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+html.js .reveal.in {
+  opacity: 1;
+  transform: none;
+}
+
+/* Above-the-fold entrance. Runs on load rather than waiting for an
+   IntersectionObserver callback, so the hero never flashes empty. */
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+html.js .rise {
+  animation: rise-in 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--reveal-delay, 0ms);
+}
+
+/* Confirmation window entrance. */
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.pop-in {
+  animation: pop-in 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes check-pop {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.12);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.check-pop {
+  animation: check-pop 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.12s both;
+}
+
+@keyframes float-y {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+.float-slow {
+  animation: float-y 7s ease-in-out infinite;
+}
+.float-slower {
+  animation: float-y 9s ease-in-out infinite;
+  animation-delay: -3s;
+}
+
+@keyframes steam-rise {
+  0% {
+    opacity: 0;
+    transform: translateY(6px) scaleX(0.9);
+  }
+  35% {
+    opacity: 0.55;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-16px) scaleX(1.15);
+  }
+}
+.steam > * {
+  animation: steam-rise 4.5s ease-out infinite;
+  transform-origin: 50% 100%;
+}
+.steam > *:nth-child(2) {
+  animation-delay: 1.2s;
+}
+.steam > *:nth-child(3) {
+  animation-delay: 2.4s;
+}
+
+@keyframes sheen {
+  0% {
+    transform: translateX(-120%) skewX(-18deg);
+  }
+  100% {
+    transform: translateX(320%) skewX(-18deg);
+  }
+}
+/* One slow pass of light across the primary button. */
+.sheen {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.sheen::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 45%;
+  background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.45), transparent);
+  animation: sheen 5.5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes marquee-slide {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.marquee-track {
+  animation: marquee-slide 32s linear infinite;
+}
+
+@keyframes pulse-dot {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgb(53 156 120 / 0.55);
+  }
+  70% {
+    box-shadow: 0 0 0 9px rgb(53 156 120 / 0);
+  }
+}
+.live-dot {
+  animation: pulse-dot 2.4s ease-out infinite;
+}
+
+@keyframes spin-slow {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.spin-slow {
+  animation: spin-slow 40s linear infinite;
+}
+
+/* --------------------------------------------------------------------------
+   Components
+   -------------------------------------------------------------------------- */
+
+.card-lift {
+  transition:
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.35s ease;
+}
+.card-lift:hover {
+  transform: translateY(-6px);
+  box-shadow:
+    0 18px 40px -18px rgb(21 14 13 / 0.32),
+    0 2px 6px -2px rgb(21 14 13 / 0.1);
+  border-color: color-mix(in oklab, var(--color-gold) 55%, transparent);
+}
+.card-lift:hover .art-zoom {
+  transform: scale(1.07) rotate(-1.2deg);
+}
+.art-zoom {
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Gold rule used under section headings. */
+.rule-gold {
+  background: linear-gradient(90deg, var(--color-gold), color-mix(in oklab, var(--color-gold) 20%, transparent));
+}
+
+.hide-scrollbar {
+  scrollbar-width: none;
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* --------------------------------------------------------------------------
+   Reduced motion: everything decorative stops. Layout is unchanged.
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  html.js .reveal {
+    opacity: 1;
+    transform: none;
+  }
+  .sheen::after {
+    display: none;
+  }
+}

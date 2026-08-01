@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="b" x1="0" y1="0" x2=".4" y2="1">
+      <stop offset="0%" stop-color="#b31f26"/>
+      <stop offset="100%" stop-color="#7c1616"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="url(#b)"/>
+  <rect x="2" y="2" width="60" height="60" rx="12" fill="none" stroke="#e2b455" stroke-opacity=".5" stroke-width="2"/>
+  <text x="32" y="45" font-family="PingFang SC, Hiragino Sans GB, Noto Sans SC, sans-serif" font-size="36" font-weight="600" text-anchor="middle" fill="#e2b455">華</text>
+</svg>

@@ -1,0 +1,17 @@
+---
+/** Error pages show the phone number in large type (pre-launch checklist). */
+import Base from '@/layouts/Base.astro';
+import { db } from '@/db/client';
+const settings = await db.query.storeSettings.findFirst();
+---
+
+<Base title="Page not found">
+  <div class="mx-auto max-w-xl px-4 py-24 text-center">
+    <h1 class="text-3xl font-bold">That page isn't on the menu.</h1>
+    <p class="mt-4 text-lg">You can always order by phone:</p>
+    <a href={`tel:${settings?.phone}`} class="mt-4 inline-block text-4xl font-bold text-brand underline">
+      {settings?.phone}
+    </a>
+    <p class="mt-8"><a href="/" class="underline">Back to the menu</a></p>
+  </div>
+</Base>

@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.astro/
+.env
+.env.local
+.env.production
+*.log
+.DS_Store
+drizzle/meta/_journal.json.bak

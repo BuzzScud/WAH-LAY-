@@ -61,7 +61,7 @@ export async function priceCart(lines: CartLineInput[]): Promise<{
     const note = (line.note ?? '').trim().slice(0, MAX_NOTE_LEN) || undefined;
     const key = `${line.itemId}|${[...line.modifierIds].sort((a, b) => a - b).join(',')}|${note ?? ''}`;
     const existing = merged.get(key);
-    if (existing) existing.qty += qty;
+    if (existing) existing.qty = Math.min(MAX_QTY, existing.qty + qty);
     else merged.set(key, { itemId: line.itemId, qty, modifierIds: [...line.modifierIds], note });
   }
 

@@ -10,7 +10,12 @@ import { db } from '@/db/client';
 
 export const GET: APIRoute = async () => {
   try {
-    await db.execute(sql`select 1`);
+    // Fast 503 beats a hung probe: a wedged DB should not make the external
+    // monitor time out or let per-minute probes pile up on the pool.
+    await Promise.race([
+      db.execute(sql`select 1`),
+      new Promise((_, reject) => setTimeout(() => reject(new Error('health_timeout')), 4000)),
+    ]);
     return new Response(JSON.stringify({ ok: true }), {
       headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' },
     });

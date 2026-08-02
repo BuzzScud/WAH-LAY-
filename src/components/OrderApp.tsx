@@ -120,6 +120,18 @@ function reconcile(cart: CartLine[], menu: MenuPayload): CartLine[] {
     const mods = item.groups
       .flatMap((g) => g.modifiers)
       .filter((m) => line.modifierIds.includes(m.id) && m.isAvailable);
+
+    // If stripping unavailable options broke a required group (the entree on
+    // a combination platter got 86'd), the whole line goes — a cart line the
+    // kitchen can't make must not survive to confirmation.
+    const chosenIds = new Set(mods.map((m) => m.id));
+    const groupsSatisfied = item.groups.every((g) => {
+      const count = g.modifiers.filter((m) => chosenIds.has(m.id)).length;
+      const min = g.required ? Math.max(1, g.minSelect) : g.minSelect;
+      return count >= min && count <= g.maxSelect;
+    });
+    if (!groupsSatisfied) return [];
+
     const override = mods.find((m) => m.priceOverrideCents != null);
     const unitPriceCents =
       (override ? override.priceOverrideCents! : item.basePriceCents) +
@@ -191,6 +203,22 @@ export default function OrderApp() {
     if (reviewing && cart.length === 0) setReviewing(false);
   }, [reviewing, cart.length]);
 
+  // The review screen behaves like a page: entering it pushes a history
+  // entry, so the phone's back button returns to the menu instead of
+  // leaving the site with a built cart.
+  useEffect(() => {
+    if (reviewing) {
+      history.pushState({ review: true }, '');
+      const onPop = () => setReviewing(false);
+      window.addEventListener('popstate', onPop);
+      return () => window.removeEventListener('popstate', onPop);
+    }
+  }, [reviewing]);
+  const backToMenu = () => {
+    if (history.state?.review) history.back();
+    else setReviewing(false);
+  };
+
   if (loadError)
     return (
       <p className="mx-auto max-w-xl p-8 text-center text-lg" role="alert">
@@ -212,7 +240,7 @@ export default function OrderApp() {
         store={menu.store}
         open={menu.open}
         readyMinutes={readyMinutes}
-        onBack={() => setReviewing(false)}
+        onBack={backToMenu}
         onSetQty={setQty}
         onClear={() => setCart([])}
       />
@@ -435,15 +463,37 @@ function ItemSheet({ item, onClose, onAdd }: { item: Item; onClose: () => void; 
   const [note, setNote] = useState('');
   const [error, setError] = useState<string | null>(null);
 
-  // Escape closes, and the page behind must not scroll while the sheet is up.
+  // Modal manners (same as CallWindow): focus lands inside, Escape closes,
+  // the page behind holds still, and Tab cannot wander into the menu under
+  // the aria-modal sheet.
+  const panel = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
-    document.addEventListener('keydown', onKey);
+    const previous = document.activeElement as HTMLElement | null;
+    panel.current?.focus();
     const prev = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') return onClose();
+      if (e.key !== 'Tab' || !panel.current) return;
+      const focusable = panel.current.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), input, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+    document.addEventListener('keydown', onKey);
     return () => {
       document.removeEventListener('keydown', onKey);
       document.body.style.overflow = prev;
+      previous?.focus();
     };
   }, [onClose]);
 
@@ -458,7 +508,12 @@ function ItemSheet({ item, onClose, onAdd }: { item: Item; onClose: () => void; 
     setError(null);
     setSelected((prev) => {
       const current = prev[group.id] ?? [];
-      if (group.maxSelect === 1) return { ...prev, [group.id]: [mod.id] };
+      if (group.maxSelect === 1) {
+        // An optional single-choice group must be un-checkable — otherwise a
+        // tapped upcharge can never be removed without rebuilding the dish.
+        if (current.includes(mod.id) && !group.required) return { ...prev, [group.id]: [] };
+        return { ...prev, [group.id]: [mod.id] };
+      }
       if (current.includes(mod.id)) return { ...prev, [group.id]: current.filter((id) => id !== mod.id) };
       if (current.length >= group.maxSelect) return prev;
       return { ...prev, [group.id]: [...current, mod.id] };
@@ -497,7 +552,11 @@ function ItemSheet({ item, onClose, onAdd }: { item: Item; onClose: () => void; 
     >
       {/* Backdrop click closes; the panel stops the bubble. */}
       <button className="absolute inset-0 cursor-default" aria-hidden="true" tabIndex={-1} onClick={onClose} />
-      <div className="relative max-h-[92vh] w-full max-w-lg overflow-y-auto rounded-t-3xl bg-white shadow-2xl sm:rounded-3xl">
+      <div
+        ref={panel}
+        tabIndex={-1}
+        className="relative max-h-[92vh] w-full max-w-lg overflow-y-auto rounded-t-3xl bg-white shadow-2xl outline-none sm:rounded-3xl"
+      >
         <div className="relative aspect-[16/9] overflow-hidden bg-ink-2">
           <DishMedia
             kind={item.art}
@@ -552,7 +611,10 @@ function ItemSheet({ item, onClose, onAdd }: { item: Item; onClose: () => void; 
                     className="h-5 w-5 accent-[#b31f26]"
                     disabled={!m.isAvailable}
                     checked={(selected[g.id] ?? []).includes(m.id)}
-                    onChange={() => toggle(g, m)}
+                    // A radio fires no change event when it's already checked,
+                    // so deselecting an optional single-choice needs onClick.
+                    onChange={g.maxSelect === 1 ? () => {} : () => toggle(g, m)}
+                    onClick={g.maxSelect === 1 ? () => toggle(g, m) : undefined}
                   />
                   <span className="flex-1">
                     {m.name}
@@ -653,6 +715,7 @@ function OrderSummary({
   const [copied, setCopied] = useState(false);
   const [copyFailed, setCopyFailed] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const inFlight = useRef(false);
   const [submitted, setSubmitted] = useState<Submission | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const phone = store?.phone ?? '';
@@ -685,6 +748,11 @@ function OrderSummary({
    * back are the ones that get displayed from here on.
    */
   const confirm = async () => {
+    // State alone can't stop a double-tap: both taps land before React
+    // re-renders the disabled buttons (there are two confirm buttons), and
+    // each POST would mint a different reference. The ref is synchronous.
+    if (inFlight.current) return;
+    inFlight.current = true;
     setSubmitting(true);
     setSubmitError(null);
     const startedAt = Number(localStorage.getItem(STARTED_KEY) ?? 0);
@@ -708,14 +776,15 @@ function OrderSummary({
       const data = await res.json();
       if (!res.ok) {
         setSubmitError(data.error ?? `Something went wrong. Just call us at ${phone}.`);
-        setSubmitting(false);
         return;
       }
       setSubmitted(data as Submission);
     } catch {
       setSubmitError(`We couldn't save your order — no matter, just call us at ${phone}.`);
+    } finally {
+      inFlight.current = false;
+      setSubmitting(false);
     }
-    setSubmitting(false);
   };
 
   /** Fire-and-forget outcome ping; must never delay opening the dialler. */

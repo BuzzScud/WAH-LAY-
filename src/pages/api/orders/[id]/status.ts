@@ -9,17 +9,23 @@
  *   any open -> canceled (staff, e.g. customer phoned in)
  */
 import type { APIRoute } from 'astro';
-import { eq } from 'drizzle-orm';
+import { and, eq, inArray } from 'drizzle-orm';
 import { db, schema } from '@/db/client';
 import { getSessionUser, hasKitchenAccess } from '@/lib/auth';
 import { notifyCustomer } from '@/lib/notify';
+import { clientIp, isRateLimited } from '@/lib/rateLimit';
 
 /**
  * Public status poll for the customer's confirmation page (Addendum C:
  * the page already polls, so "Ready" shows there before the Phase-2 SMS
  * exists). Returns the status string only — no PII.
  */
-export const GET: APIRoute = async ({ params }) => {
+export const GET: APIRoute = async ({ params, request, clientAddress }) => {
+  // The confirmation page polls every ~15s; 60/min per IP is generous for a
+  // customer and stops bulk enumeration of sequential order ids.
+  if (isRateLimited(`status:${clientIp(request, clientAddress)}`, 60, 60_000)) {
+    return new Response(JSON.stringify({ error: 'Too many requests' }), { status: 429 });
+  }
   const id = Number(params.id);
   if (!Number.isInteger(id)) return new Response(JSON.stringify({ error: 'Invalid' }), { status: 400 });
   const order = await db.query.orders.findFirst({ where: eq(schema.orders.id, id) });
@@ -30,7 +36,8 @@ export const GET: APIRoute = async ({ params }) => {
   );
 };
 
-const TRANSITIONS: Record<string, string[]> = {
+type OrderStatus = typeof schema.orders.$inferSelect.status;
+const TRANSITIONS: Record<string, OrderStatus[]> = {
   acknowledged: ['new'],
   rejected: ['new'],
   ready: ['acknowledged', 'new'],
@@ -51,21 +58,28 @@ export const POST: APIRoute = async ({ params, request, cookies }) => {
     return new Response(JSON.stringify({ error: 'Invalid request' }), { status: 400 });
   }
 
-  const order = await db.query.orders.findFirst({ where: eq(schema.orders.id, id) });
-  if (!order) return new Response(JSON.stringify({ error: 'Not found' }), { status: 404 });
-  if (!TRANSITIONS[status].includes(order.status)) {
-    return new Response(
-      JSON.stringify({ error: `Cannot go from ${order.status} to ${status}` }),
-      { status: 409 }
-    );
-  }
-
   const now = new Date();
   const patch: Partial<typeof schema.orders.$inferInsert> = { status: status as any };
   if (status === 'acknowledged') patch.acknowledgedAt = now;
   if (status === 'ready') patch.readyAt = now;
   if (['picked_up', 'no_show', 'canceled', 'rejected'].includes(status)) patch.closedAt = now;
-  await db.update(schema.orders).set(patch).where(eq(schema.orders.id, id));
+
+  // Atomic, status-guarded update: two concurrent taps (double-Accept, or
+  // Accept vs Reject) must not both apply — only the one whose expected
+  // current status still holds wins; the loser gets the 409.
+  const [order] = await db
+    .update(schema.orders)
+    .set(patch)
+    .where(and(eq(schema.orders.id, id), inArray(schema.orders.status, TRANSITIONS[status])))
+    .returning();
+  if (!order) {
+    const current = await db.query.orders.findFirst({ where: eq(schema.orders.id, id) });
+    if (!current) return new Response(JSON.stringify({ error: 'Not found' }), { status: 404 });
+    return new Response(
+      JSON.stringify({ error: `Cannot go from ${current.status} to ${status}` }),
+      { status: 409 }
+    );
+  }
 
   const settings = await db.query.storeSettings.findFirst();
   if (settings) {

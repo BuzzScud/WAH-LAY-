@@ -97,6 +97,10 @@ export async function sendEmail(to: string, subject: string, html: string, kind:
 
 const dollars = (c: number) => `$${(c / 100).toFixed(2)}`;
 
+/** Customer-typed text (names, notes) goes into email HTML — escape it. */
+const esc = (s: string) =>
+  s.replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
+
 /** Layers 2 + 3: owner SMS + kitchen archive email, on every new order. */
 export async function notifyNewOrder(order: {
   id: number;
@@ -124,18 +128,18 @@ export async function notifyNewOrder(order: {
     const rows = order.items
       .map(
         (i) =>
-          `<tr><td>${i.qty}x</td><td><strong>${i.nameSnapshot}</strong><br>${i.modifiers
-            .map((m) => m.nameSnapshot)
-            .join(', ')}${i.note ? `<br><strong>NOTE: ${i.note}</strong>` : ''}</td><td>${dollars(i.unitPriceCents * i.qty)}</td></tr>`
+          `<tr><td>${i.qty}x</td><td><strong>${esc(i.nameSnapshot)}</strong><br>${i.modifiers
+            .map((m) => esc(m.nameSnapshot))
+            .join(', ')}${i.note ? `<br><strong>NOTE: ${esc(i.note)}</strong>` : ''}</td><td>${dollars(i.unitPriceCents * i.qty)}</td></tr>`
       )
       .join('');
     await sendEmail(
       kitchenEmail,
       `Order #${order.orderNumber} — ${order.customerName} — ${dollars(order.totalCents)}`,
       `<h2>Order #${order.orderNumber}</h2>
-       <p>${order.customerName} — ${order.customerPhone}<br>Pickup: ${order.pickupAt.toLocaleString()}</p>
+       <p>${esc(order.customerName)} — ${order.customerPhone}<br>Pickup: ${order.pickupAt.toLocaleString()}</p>
        <table>${rows}</table>
-       ${order.notes ? `<p><strong>ORDER NOTE: ${order.notes}</strong></p>` : ''}
+       ${order.notes ? `<p><strong>ORDER NOTE: ${esc(order.notes)}</strong></p>` : ''}
        <p>Total: <strong>${dollars(order.totalCents)}</strong> — pay at pickup</p>`,
       'new_order',
       order.id

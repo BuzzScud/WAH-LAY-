@@ -7,7 +7,9 @@ const url =
 
 // Reuse one pool across dev HMR reloads.
 const globalForDb = globalThis as unknown as { __pgClient?: ReturnType<typeof postgres> };
-const client = globalForDb.__pgClient ?? postgres(url, { max: 10 });
+const client =
+  globalForDb.__pgClient ??
+  postgres(url, { max: 10, connect_timeout: 5, idle_timeout: 30 });
 globalForDb.__pgClient = client;
 
 export const db = drizzle(client, { schema });

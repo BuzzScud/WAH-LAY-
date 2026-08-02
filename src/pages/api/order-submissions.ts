@@ -56,11 +56,13 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     return json({ error: 'That order is too large to record. Please call us.' }, 400);
   }
 
-  const [settings, categories, items, mods, open] = await Promise.all([
+  const [settings, categories, items, mods, groups, links, open] = await Promise.all([
     db.query.storeSettings.findFirst(),
     db.query.categories.findMany(),
     db.query.menuItems.findMany(),
     db.query.modifiers.findMany(),
+    db.query.modifierGroups.findMany(),
+    db.query.itemModifierGroups.findMany(),
     getOpenState(),
   ]);
   if (!settings) return json({ error: 'Store not configured.' }, 503);
@@ -68,6 +70,13 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
   const itemById = new Map(items.map((i) => [i.id, i]));
   const modById = new Map(mods.map((m) => [m.id, m]));
   const categoryById = new Map(categories.map((c) => [c.id, c]));
+  const groupById = new Map(groups.map((g) => [g.id, g]));
+  const linksByItem = new Map<number, number[]>();
+  for (const l of links) {
+    const list = linksByItem.get(l.itemId) ?? [];
+    list.push(l.groupId);
+    linksByItem.set(l.itemId, list);
+  }
 
   // --- Re-price every line from the menu, ignoring whatever the client sent.
   const lines: schema.SubmissionLine[] = [];
@@ -79,9 +88,27 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     if (!item || !item.isAvailable) continue;
 
     const qty = clamp(raw.qty, 1, MAX_QTY) ?? 1;
+    const allowedGroupIds = new Set(linksByItem.get(item.id) ?? []);
     const chosen: ModifierRow[] = (Array.isArray(raw.modifierIds) ? raw.modifierIds : [])
       .map((id: unknown) => modById.get(id as number))
-      .filter((m: ModifierRow | undefined): m is ModifierRow => Boolean(m) && m!.isAvailable);
+      .filter(
+        (m: ModifierRow | undefined): m is ModifierRow =>
+          // Only modifiers that actually belong to a group attached to THIS
+          // item — a tampered client must not attach arbitrary options.
+          Boolean(m) && m!.isAvailable && allowedGroupIds.has(m!.groupId)
+      );
+
+    // A line whose required group is no longer satisfied (option 86'd since
+    // the cart was saved) must not get a reference — the kitchen would have
+    // to refuse it on the phone. Drop it like a pulled dish.
+    const requirementsMet = [...allowedGroupIds].every((gid) => {
+      const g = groupById.get(gid);
+      if (!g) return true;
+      const count = chosen.filter((m) => m.groupId === gid).length;
+      const min = g.required ? Math.max(1, g.minSelect) : g.minSelect;
+      return count >= min && count <= g.maxSelect;
+    });
+    if (!requirementsMet) continue;
 
     const override = chosen.find((m) => m.priceOverrideCents != null);
     const unitPriceCents =
@@ -151,9 +178,17 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
  * sendBeacon as the customer leaves for the dialler, so it must stay cheap and
  * must never block. Unknown references are ignored silently.
  */
-export const PATCH: APIRoute = async ({ request }) => {
+export const PATCH: APIRoute = async ({ request, clientAddress }) => {
+  // Same silent 204 for the limiter as for an unknown reference — this is
+  // analytics, but an unauthenticated write still must not be hammerable.
+  if (isRateLimited(`submit-ping:${clientIp(request, clientAddress)}`, 20, 60_000)) {
+    return new Response(null, { status: 204 });
+  }
   const body = await request.json().catch(() => null);
-  const ref = typeof body?.reference === 'string' ? body.reference : null;
+  const ref =
+    typeof body?.reference === 'string' && /^WL-[A-HJ-NP-Z2-9]{6}$/.test(body.reference)
+      ? body.reference
+      : null;
   const event = body?.event === 'called' ? 'called' : body?.event === 'copied' ? 'copied' : null;
   if (!ref || !event) return new Response(null, { status: 204 });
 

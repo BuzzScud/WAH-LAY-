@@ -95,11 +95,20 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
   const pickupAt = quotePickupAt(settings.prepTimeMinutes, pickupOffset);
 
   // --- write everything in one transaction ---
-  const order = await db.transaction(async (tx) => {
+  let order;
+  try {
+    order = await db.transaction(async (tx) => {
+    // Serialize number generation: two concurrent orders would otherwise read
+    // the same count and mint the same ticket number.
+    await tx.execute(sql`select pg_advisory_xact_lock(824041)`);
     const [{ count }] = await tx
       .select({ count: sql<number>`count(*)::int` })
       .from(schema.orders)
-      .where(sql`created_at::date = (now() at time zone ${settings.timezone})::date`);
+      // Both sides in STORE-local time — created_at::date alone is the DB
+      // server's timezone (UTC), which resets the daily count mid-evening ET.
+      .where(
+        sql`(created_at at time zone ${settings.timezone})::date = (now() at time zone ${settings.timezone})::date`
+      );
     const orderNumber = String(101 + count); // short, daily-ish, readable on a ticket
 
     const [o] = await tx
@@ -141,7 +150,19 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
       }
     }
     return o;
-  });
+    });
+  } catch (e: any) {
+    // A true concurrent double-tap slips past the read-then-insert idempotency
+    // check; the unique constraint catches it. Return the winner's order.
+    if (String(e?.code) === '23505' || /idempotency/i.test(String(e?.message))) {
+      const winner = await db.query.orders.findFirst({
+        where: eq(schema.orders.idempotencyKey, idempotencyKey),
+      });
+      if (winner) return json({ orderNumber: winner.orderNumber, orderId: winner.id, duplicate: true });
+    }
+    console.error('[orders] insert failed:', e);
+    return fail('Something went wrong placing your order', 500);
+  }
 
   // --- notification fan-out (layers 2+3) — never blocks the response ---
   notifyNewOrder({

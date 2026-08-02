@@ -4,15 +4,24 @@
  * container, move this to Postgres.
  *
  * Addendum B4: when Cloudflare's proxy is on, the socket address is a
- * Cloudflare IP shared by everyone. Trust CF-Connecting-IP first, else the
- * proxy chain's X-Forwarded-For, else the socket.
+ * Cloudflare IP shared by everyone. CF-Connecting-IP is only trusted when
+ * TRUST_CF_HEADER=true (set it once the origin is locked to Cloudflare IPs) —
+ * otherwise anyone hitting the droplet directly could spoof it and rotate
+ * through every IP-keyed limit. From X-Forwarded-For we take the LAST entry:
+ * that is the one our own Caddy appended (its actual peer); entries to the
+ * left are client-supplied and forgeable.
  */
 
 export function clientIp(request: Request, socketAddr?: string): string {
-  const cf = request.headers.get('cf-connecting-ip');
-  if (cf) return cf.trim();
+  if (process.env.TRUST_CF_HEADER === 'true') {
+    const cf = request.headers.get('cf-connecting-ip');
+    if (cf) return cf.trim();
+  }
   const xff = request.headers.get('x-forwarded-for');
-  if (xff) return xff.split(',')[0].trim();
+  if (xff) {
+    const parts = xff.split(',');
+    return parts[parts.length - 1].trim();
+  }
   return socketAddr ?? 'unknown';
 }
 

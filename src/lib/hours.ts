@@ -67,19 +67,33 @@ export async function getOpenState(at: Date = new Date()): Promise<OpenState> {
       acceptingOrders: false,
       reason: closure.reason ? `Closed today — ${closure.reason}` : 'Closed today',
     };
-  } else if (closure && closure.openTime && closure.closeTime) {
+  }
+
+  // A close at or before the open time means the window runs past midnight
+  // (11:00–00:00, or 17:00–02:00): extend close into tomorrow's minutes.
+  const span = (open: number, close: number) => (close <= open ? close + 1440 : close);
+
+  if (closure && closure.openTime && closure.closeTime) {
     windows = [
-      { open: toMinutes(closure.openTime), close: toMinutes(closure.closeTime), lastOrderOffset: 20 },
+      {
+        open: toMinutes(closure.openTime),
+        close: span(toMinutes(closure.openTime), toMinutes(closure.closeTime)),
+        lastOrderOffset: 20,
+      },
     ];
   } else {
     const rows: HoursRow[] = await db.query.businessHours.findMany();
-    windows = rows
-      .filter((r) => r.dayOfWeek === now.weekday)
-      .map((r) => ({
-        open: toMinutes(r.openTime),
-        close: toMinutes(r.closeTime),
-        lastOrderOffset: r.lastOrderOffsetMinutes,
-      }));
+    const forDay = (day: number, shift: number) =>
+      rows
+        .filter((r) => r.dayOfWeek === day)
+        .map((r) => ({
+          open: toMinutes(r.openTime) + shift,
+          close: span(toMinutes(r.openTime), toMinutes(r.closeTime)) + shift,
+          lastOrderOffset: r.lastOrderOffsetMinutes,
+        }));
+    // Yesterday's windows shifted back a day so one spanning midnight (e.g.
+    // Fri 17:00–02:00) still covers Sat 01:30.
+    windows = [...forDay(now.weekday, 0), ...forDay((now.weekday + 6) % 7, -1440)];
   }
 
   const inWindow = windows.find((w) => now.minutes >= w.open && now.minutes < w.close);

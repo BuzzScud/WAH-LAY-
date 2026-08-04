@@ -4,6 +4,7 @@
  */
 import { useState } from 'react';
 import OrderInsights from './OrderInsights';
+import { withBase } from '@/lib/paths';
 
 interface AdminItem { id: number; nameEn: string; basePriceCents: number; isAvailable: boolean }
 interface Initial {
@@ -42,8 +43,8 @@ export default function AdminApp({ initial }: { initial: Initial }) {
         <button
           className="min-h-11 rounded-lg border border-stone-300 px-4"
           onClick={async () => {
-            await fetch('/api/admin/login', { method: 'DELETE' });
-            location.href = '/admin/login';
+            await fetch(withBase('/api/admin/login'), { method: 'DELETE' });
+            location.href = withBase('/admin/login');
           }}
         >
           Sign out
@@ -171,7 +172,7 @@ export default function AdminApp({ initial }: { initial: Initial }) {
               <button
                 className="min-h-11 rounded-lg border border-stone-300 px-3"
                 onClick={async () => {
-                  const res = await fetch('/api/admin/block', {
+                  const res = await fetch(withBase('/api/admin/block'), {
                     method: 'DELETE',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ phone: b.phone }),
@@ -196,7 +197,7 @@ export default function AdminApp({ initial }: { initial: Initial }) {
           <button
             className="min-h-11 rounded-lg bg-stone-800 px-4 font-semibold text-white"
             onClick={async () => {
-              const res = await fetch('/api/admin/block', {
+              const res = await fetch(withBase('/api/admin/block'), {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ phone: newBlock, reason: 'no-show' }),

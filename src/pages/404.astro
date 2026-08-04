@@ -2,6 +2,7 @@
 /** Error pages show the phone number in large type (pre-launch checklist). */
 import Base from '@/layouts/Base.astro';
 import { db } from '@/db/client';
+import { withBase } from '@/lib/paths';
 const settings = await db.query.storeSettings.findFirst();
 ---
 
@@ -12,6 +13,6 @@ const settings = await db.query.storeSettings.findFirst();
     <a href={`tel:${settings?.phone}`} class="mt-4 inline-block text-4xl font-bold text-brand underline">
       {settings?.phone}
     </a>
-    <p class="mt-8"><a href="/" class="underline">Back to the menu</a></p>
+    <p class="mt-8"><a href={withBase('/')} class="underline">Back to the menu</a></p>
   </div>
 </Base>

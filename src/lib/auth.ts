@@ -12,10 +12,17 @@ import { eq, lt } from 'drizzle-orm';
 import bcrypt from 'bcryptjs';
 import type { AstroCookies } from 'astro';
 import { db, schema } from '@/db/client';
+import { BASE_PATH } from '@/lib/paths';
 
 const SESSION_COOKIE = 'session';
 const KITCHEN_COOKIE = 'kitchen_device';
 const SESSION_TTL_MS = 1000 * 60 * 60 * 24 * 30; // 30 days
+/**
+ * Scope cookies to our mount point. When Wah Lay shares an origin with a host
+ * app, `path: '/'` would attach these to every one of the host's requests too
+ * (and invite a name collision with its own `session` cookie).
+ */
+const COOKIE_PATH = BASE_PATH || '/';
 
 export async function verifyLogin(username: string, password: string) {
   const user = await db.query.users.findFirst({ where: eq(schema.users.username, username) });
@@ -38,7 +45,7 @@ export async function createSession(cookies: AstroCookies, userId: number) {
     httpOnly: true,
     sameSite: 'lax',
     secure: import.meta.env.PROD,
-    path: '/',
+    path: COOKIE_PATH,
     maxAge: SESSION_TTL_MS / 1000,
   });
 }
@@ -46,7 +53,7 @@ export async function createSession(cookies: AstroCookies, userId: number) {
 export async function destroySession(cookies: AstroCookies) {
   const token = cookies.get(SESSION_COOKIE)?.value;
   if (token) await db.delete(schema.sessions).where(eq(schema.sessions.token, token));
-  cookies.delete(SESSION_COOKIE, { path: '/' });
+  cookies.delete(SESSION_COOKIE, { path: COOKIE_PATH });
 }
 
 export async function getSessionUser(cookies: AstroCookies) {
@@ -79,7 +86,7 @@ export function enrollKitchenDevice(cookies: AstroCookies, presentedToken: strin
     httpOnly: true,
     sameSite: 'lax',
     secure: import.meta.env.PROD,
-    path: '/',
+    path: COOKIE_PATH,
     maxAge: 60 * 60 * 24 * 365, // long-lived device cookie
   });
   return true;

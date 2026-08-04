@@ -7,6 +7,7 @@
  * Buttons per the full lifecycle: Accept / Ready / Picked up / Reject.
  */
 import { useEffect, useRef, useState } from 'react';
+import { withBase } from '@/lib/paths';
 
 interface KitchenOrder {
   id: number;
@@ -33,7 +34,7 @@ export default function KitchenApp() {
 
   const poll = async () => {
     try {
-      const res = await fetch('/api/kitchen/orders');
+      const res = await fetch(withBase('/api/kitchen/orders'));
       if (!res.ok) throw new Error(String(res.status));
       setOrders((await res.json()).orders);
       setOffline(false);

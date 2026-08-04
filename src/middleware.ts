@@ -1,11 +1,24 @@
 import { defineMiddleware } from 'astro:middleware';
 import { getSessionUser, hasKitchenAccess, enrollKitchenDevice } from '@/lib/auth';
 import { startEscalationTicker } from '@/lib/escalation';
+import { stripBase, withBase } from '@/lib/paths';
 
 startEscalationTicker();
 
+/**
+ * Routes that may be framed by the site we are mounted inside. Everything else —
+ * /admin and /kitchen above all, which render customer names and phone numbers —
+ * stays unframeable. Scope this list narrowly; it is the clickjacking boundary.
+ */
+const FRAMEABLE_PATHS = new Set(['/', '/order', '/privacy']);
+
 export const onRequest = defineMiddleware(async (context, next) => {
-  const { pathname, searchParams } = new URL(context.request.url);
+  const url = new URL(context.request.url);
+  const { searchParams } = url;
+  // MUST be the stripped path. `request.url` still carries the base that Astro's
+  // router already removed, so comparing the raw pathname against '/admin' would
+  // silently never match and leave every protected surface open. See lib/paths.ts.
+  const pathname = stripBase(url.pathname);
 
   // --- Admin: owner session required (login page + login API excepted) ---
   const isAdminSurface =
@@ -17,7 +30,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
     if (!user) {
       if (pathname.startsWith('/api/'))
         return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
-      return context.redirect('/admin/login');
+      return context.redirect(withBase('/admin/login'));
     }
     context.locals.user = { id: user.id, username: user.username };
   }
@@ -43,7 +56,10 @@ export const onRequest = defineMiddleware(async (context, next) => {
   const headers = response.headers;
   headers.set('X-Content-Type-Options', 'nosniff');
   headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
-  headers.set('X-Frame-Options', 'DENY'); // /admin and /kitchen must not be framed
+  // Only the public storefront may be framed by the host site. /admin and /kitchen
+  // keep DENY — they show customer PII, which is what framing protection is for.
+  const frameable = FRAMEABLE_PATHS.has(pathname);
+  headers.set('X-Frame-Options', frameable ? 'SAMEORIGIN' : 'DENY');
   headers.set('Permissions-Policy', 'geolocation=(), microphone=(), camera=(), payment=()');
 
   // frame-ancestors is the modern half of X-Frame-Options. No 'unsafe-eval';
@@ -61,7 +77,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
         "connect-src 'self'",
         "form-action 'self'",
         "base-uri 'self'",
-        "frame-ancestors 'none'",
+        `frame-ancestors ${frameable ? "'self'" : "'none'"}`,
         "object-src 'none'",
       ].join('; ')
     );

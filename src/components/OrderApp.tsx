@@ -21,6 +21,7 @@ import DishMedia from './DishMedia';
 import type { ArtKind } from './DishArt';
 import { ArrowRightIcon, CheckIcon, ChiliIcon, CloseIcon, PhoneIcon, TrashIcon } from './Icon';
 import { estimateReadyMinutes } from '@/lib/prepTime';
+import { withBase } from '@/lib/paths';
 
 interface Modifier {
   id: number;
@@ -161,7 +162,7 @@ export default function OrderApp() {
 
   useEffect(() => {
     setCart(loadCart());
-    fetch('/api/menu')
+    fetch(withBase('/api/menu'))
       .then((r) => r.json())
       .then((payload: MenuPayload) => {
         setMenu(payload);
@@ -757,7 +758,7 @@ function OrderSummary({
     setSubmitError(null);
     const startedAt = Number(localStorage.getItem(STARTED_KEY) ?? 0);
     try {
-      const res = await fetch('/api/order-submissions', {
+      const res = await fetch(withBase('/api/order-submissions'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -792,7 +793,7 @@ function OrderSummary({
     if (!submitted) return;
     const payload = JSON.stringify({ reference: submitted.reference, event });
     try {
-      fetch('/api/order-submissions', {
+      fetch(withBase('/api/order-submissions'), {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: payload,

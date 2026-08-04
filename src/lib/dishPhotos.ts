@@ -9,6 +9,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { dishSlug } from './dishArt';
+import { withBase } from './paths';
 
 const EXTENSIONS = ['webp', 'jpg', 'jpeg', 'png', 'avif'];
 
@@ -51,7 +52,10 @@ function lookup(dir: string, slug: string): string | null {
   const files = index();
   for (const ext of EXTENSIONS) {
     const rel = `${dir}/${slug}.${ext}`;
-    if (files.has(rel)) return `/${rel}`;
+    // withBase: these are public/ assets, and Astro does not rewrite URLs it
+    // never sees as literals. Without it every uploaded dish photo 404s once
+    // the app is mounted under a base path.
+    if (files.has(rel)) return withBase(`/${rel}`);
   }
   return null;
 }

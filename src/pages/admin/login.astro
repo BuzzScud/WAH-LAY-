@@ -25,11 +25,12 @@ import '@/styles/global.css';
       <button class="w-full rounded-lg bg-brand px-4 py-3 font-semibold text-white">Sign in</button>
     </form>
     <script>
+      import { withBase } from '@/lib/paths';
       const form = document.getElementById('login') as HTMLFormElement;
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const res = await fetch('/api/admin/login', { method: 'POST', body: new FormData(form) });
-        if (res.ok) location.href = '/admin';
+        const res = await fetch(withBase('/api/admin/login'), { method: 'POST', body: new FormData(form) });
+        if (res.ok) location.href = withBase('/admin');
         else {
           const err = document.getElementById('error')!;
           err.textContent = (await res.json().catch(() => ({}))).error ?? 'Login failed';

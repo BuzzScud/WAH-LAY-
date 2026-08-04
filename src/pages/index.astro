@@ -17,6 +17,7 @@ import { getOpenState } from '@/lib/hours';
 import { artForCategory, artForDish, artTint, dishSlug } from '@/lib/dishArt';
 import { categoryPhoto, dishPhoto } from '@/lib/dishPhotos';
 import { todayIndex, week } from '@/lib/hoursDisplay';
+import { withBase } from '@/lib/paths';
 
 const settings = await db.query.storeSettings.findFirst();
 const open = await getOpenState();
@@ -136,7 +137,7 @@ const jsonLd = {
 
         <div class="rise mt-8 flex flex-wrap items-center gap-3" style="--reveal-delay:240ms">
           <a
-            href="/order"
+            href={withBase('/order')}
             class="sheen inline-flex min-h-14 items-center gap-2 rounded-2xl bg-gradient-to-b from-gold to-gold-deep px-8 py-4 text-lg font-bold text-ink shadow-xl shadow-black/30 transition-transform duration-300 hover:-translate-y-0.5"
           >
             Order Now
@@ -254,7 +255,7 @@ const jsonLd = {
               <div class="flex flex-wrap items-end gap-4">
                 <p class="font-display text-5xl font-bold text-gold">{dollars(superSpecial.basePriceCents)}</p>
                 <a
-                  href="/order"
+                  href={withBase('/order')}
                   class="inline-flex min-h-11 items-center rounded-xl bg-cream px-5 font-bold text-ink transition-transform duration-300 hover:-translate-y-0.5"
                 >
                   Order it
@@ -354,7 +355,7 @@ const jsonLd = {
           {featured.map((item, i) => (
             <li class="reveal" style={`--reveal-delay:${i * 70}ms`}>
               <a
-                href="/order"
+                href={withBase('/order')}
                 class="card-lift group flex h-full flex-col overflow-hidden rounded-[1.25rem] border border-line bg-white shadow-sm"
               >
                 <div class="relative aspect-[4/3] overflow-hidden bg-ink-2">
@@ -564,7 +565,7 @@ const jsonLd = {
         <!-- Collage of the owner's own menu photography -->
         <div class="reveal grid grid-cols-2 gap-4" style="--reveal-delay:120ms">
           <img
-            src="/brand/wordmark.jpg"
+            src={withBase('/brand/wordmark.jpg')}
             alt={`${storeName} sign`}
             loading="lazy"
             decoding="async"
@@ -684,7 +685,7 @@ const jsonLd = {
         Build it here, call it in, and pay at the counter when you pick it up.
       </p>
       <a
-        href="/order"
+        href={withBase('/order')}
         class="sheen reveal mt-9 inline-flex min-h-14 items-center gap-2 rounded-2xl bg-gradient-to-b from-gold to-gold-deep px-9 py-4 text-lg font-bold text-ink shadow-xl shadow-black/30 transition-transform duration-300 hover:-translate-y-0.5"
         style="--reveal-delay:200ms"
       >

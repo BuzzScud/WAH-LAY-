@@ -6,6 +6,7 @@ import { db } from '@/db/client';
 import { getOpenState } from '@/lib/hours';
 import { groupedWeek, todayIndex } from '@/lib/hoursDisplay';
 import { DishArtSprite } from '@/components/DishArt';
+import { withBase } from '@/lib/paths';
 
 interface Props {
   title: string;
@@ -38,7 +39,7 @@ const payments = ['Cash', 'Visa', 'MasterCard', 'Discover', 'Apple Pay', 'Zelle'
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="restaurant.restaurant" />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href={withBase('/favicon.svg')} type="image/svg+xml" />
     <!-- Set before paint so reveal-on-scroll never flashes hidden content
          on a browser where the script is blocked. -->
     <script is:inline>
@@ -64,7 +65,7 @@ const payments = ['Cash', 'Visa', 'MasterCard', 'Discover', 'Apple Pay', 'Zelle'
       ]}
     >
       <nav class="mx-auto flex max-w-6xl items-center gap-3 px-4 py-3 sm:gap-5">
-        <a href="/" class="group flex items-center gap-2.5" aria-label={`${storeName} home`}>
+        <a href={withBase('/')} class="group flex items-center gap-2.5" aria-label={`${storeName} home`}>
           <span
             class="relative grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-brand to-brand-dark ring-1 ring-gold/40"
           >
@@ -95,7 +96,7 @@ const payments = ['Cash', 'Visa', 'MasterCard', 'Discover', 'Apple Pay', 'Zelle'
             >{phone}</a
           >
           <a
-            href="/order"
+            href={withBase('/order')}
             class="inline-flex min-h-11 items-center rounded-xl bg-gradient-to-b from-gold to-gold-deep px-5 py-2.5 text-sm font-bold text-ink shadow-lg shadow-black/25 transition-transform duration-300 hover:-translate-y-0.5"
             >Order Now</a
           >
@@ -118,7 +119,7 @@ const payments = ['Cash', 'Visa', 'MasterCard', 'Discover', 'Apple Pay', 'Zelle'
         <div class="grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-12">
           <!-- Identity -->
           <div class="sm:col-span-2 lg:col-span-4">
-            <a href="/" class="inline-flex items-center gap-2.5">
+            <a href={withBase('/')} class="inline-flex items-center gap-2.5">
               <span
                 class="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-brand to-brand-dark ring-1 ring-gold/40"
               >
@@ -130,7 +131,7 @@ const payments = ['Cash', 'Visa', 'MasterCard', 'Discover', 'Apple Pay', 'Zelle'
               Wok-fired Chinese takeout in Miramar. Build your order online, call it in, pay at the counter.
             </p>
             <a
-              href="/order"
+              href={withBase('/order')}
               class="mt-5 inline-flex min-h-11 items-center rounded-xl bg-gradient-to-b from-gold to-gold-deep px-5 text-sm font-bold text-ink transition-transform duration-300 hover:-translate-y-0.5"
               >Start an order</a
             >
@@ -201,7 +202,7 @@ const payments = ['Cash', 'Visa', 'MasterCard', 'Discover', 'Apple Pay', 'Zelle'
       <div class="relative border-t border-white/8">
         <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-5 text-xs">
           <p>© {year} {storeName}. All rights reserved.</p>
-          <a href="/privacy" class="underline underline-offset-4 hover:text-gold">Privacy policy</a>
+          <a href={withBase('/privacy')} class="underline underline-offset-4 hover:text-gold">Privacy policy</a>
         </div>
       </div>
     </footer>
